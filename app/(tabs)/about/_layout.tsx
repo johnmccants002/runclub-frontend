@@ -23,6 +23,13 @@ const Layout = (props: Props) => {
           headerTitle: "",
         }}
       />
+      <Stack.Screen
+        name="members"
+        options={{
+          headerBackTitleVisible: false,
+          headerTitle: "Members",
+        }}
+      />
     </Stack>
   );
 };

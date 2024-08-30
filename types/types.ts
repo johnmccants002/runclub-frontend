@@ -8,3 +8,22 @@ export interface Announcement {
   imageUrl: string | ImageSourcePropType;
   createdAt: string;
 }
+
+export interface UserProfile {
+  about: string;
+  favoriteBrunchSpot: string;
+  instagram: string;
+  phoneNumber: string;
+}
+
+export interface User {
+  _id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  createdAt: string;
+  updatedAt: string;
+  profile: UserProfile;
+  isMember: boolean;
+  membershipStatus: "accepted" | "denied" | "pending";
+}

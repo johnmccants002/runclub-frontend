@@ -29,6 +29,12 @@ const DATA = [
     icon: "notifications-outline",
     route: "/about/contact",
   },
+  {
+    id: "4",
+    title: "Run Club Members",
+    icon: "person",
+    route: "/about/members",
+  },
 ];
 
 export default function AboutSectionScreen() {
