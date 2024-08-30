@@ -27,3 +27,10 @@ export interface User {
   isMember: boolean;
   membershipStatus: "accepted" | "denied" | "pending";
 }
+
+export interface CreateAnnouncementInput {
+  title: string;
+  content: string;
+  imageUrl?: string; // Optional field
+  userId: string;
+}

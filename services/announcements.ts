@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { Announcement } from "../types/types";
+import { Announcement, CreateAnnouncementInput } from "../types/types";
 
 const fetchAnnouncements = async (): Promise<Announcement[]> => {
   const { data } = await axios.get("http://localhost:5050/announcements/all");
@@ -17,8 +17,8 @@ export const useAnnouncementsQuery = () => {
 export const useAddAnnouncementMutation = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<Announcement, Error, Omit<Announcement, "_id">>({
-    mutationFn: async (newAnnouncement: Omit<Announcement, "_id">) => {
+  return useMutation<Announcement, Error, CreateAnnouncementInput>({
+    mutationFn: async (newAnnouncement: CreateAnnouncementInput) => {
       const { data } = await axios.post<Announcement>(
         "http://localhost:5050/announcements/create",
         newAnnouncement
