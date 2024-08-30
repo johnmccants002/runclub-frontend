@@ -8,7 +8,7 @@ export const useLoginMutation = () => {
   return useMutation(
     async ({ email, password }) => {
       setAuthLoading(true);
-      const { data } = await axios.post("http://localhost:3000/auth/login", {
+      const { data } = await axios.post("http://localhost:5050/auth/login", {
         email,
         password,
       });
@@ -30,19 +30,17 @@ export const useLoginMutation = () => {
 export const useRegisterMutation = () => {
   const { setAuthLoading } = useAuthStore();
 
-  return useMutation(
-    async (userData) => {
+  return useMutation({
+    mutationFn: async (userData) => {
       setAuthLoading(true);
-      await axios.post("http://localhost:3000/auth/register", userData);
+      await axios.post("http://localhost:5050/auth/signup", userData);
     },
-    {
-      onSuccess: () => {
-        setAuthLoading(false);
-      },
-      onError: () => {
-        setAuthLoading(false);
-        console.error("Registration failed");
-      },
-    }
-  );
+    onSuccess: () => {
+      setAuthLoading(false);
+    },
+    onError: () => {
+      setAuthLoading(false);
+      console.error("Registration failed");
+    },
+  });
 };

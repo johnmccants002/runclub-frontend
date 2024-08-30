@@ -11,7 +11,7 @@ type AnnouncementProps = {
   title: string;
   description: string;
   date: string;
-  imageUrl?: ImageSourcePropType;
+  imageUrl?: string;
 };
 
 const Announcement: React.FC<AnnouncementProps> = ({
@@ -25,7 +25,7 @@ const Announcement: React.FC<AnnouncementProps> = ({
 
     <View style={styles.container}>
       <Text style={styles.title}>{title}</Text>
-      {imageUrl && <Image source={imageUrl} style={styles.image} />}
+      {imageUrl && <Image source={{ uri: imageUrl }} style={styles.image} />}
 
       <Text style={styles.description}>{description}</Text>
       <Text style={styles.date}>{date}</Text>

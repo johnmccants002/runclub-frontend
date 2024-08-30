@@ -1,4 +1,3 @@
-import SplashScreen from "../components/screens/SplashScreen";
 import { Redirect } from "expo-router";
 
 import React, { useEffect, useState } from "react";
@@ -9,11 +8,7 @@ const Screen = (props: Props) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {}, []);
-  return (
-    <>
-      <Redirect href={"/(auth)/landing"} />
-    </>
-  );
+  return <Redirect href={"/(tabs)/"} />;
 };
 
 export default Screen;

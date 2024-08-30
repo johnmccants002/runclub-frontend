@@ -1,35 +1,37 @@
 import React from "react";
-import { Image, StyleSheet, View, Text, ScrollView } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  View,
+  Text,
+  ScrollView,
+  ActivityIndicator,
+  ImageSourcePropType,
+} from "react-native";
 import ParallaxScrollView from "../../ParallaxScrollView";
 import Announcement from "../../Announcement";
-
-const dummyData = [
-  {
-    id: "1",
-    title: "Welcome to the 916 Run Club!",
-    description:
-      "We are excited to kick off our first run of the season. Join us this Saturday at 8 AM at the City Park!",
-    date: "August 22, 2024",
-    imageUrl: require("@/assets/images/running.jpg"),
-  },
-  {
-    id: "2",
-    title: "Running Tips for Beginners",
-    description:
-      "Check out our latest blog post with tips for those new to running. Let's get you started on the right foot!",
-    date: "August 20, 2024",
-  },
-  {
-    id: "3",
-    title: "Weekly Challenge: 5K",
-    description:
-      "This week's challenge is to complete a 5K. Post your results on our social media with the hashtag #916RunClub!",
-    date: "August 18, 2024",
-    imageUrl: require("@/assets/images/grouprun.jpg"),
-  },
-];
+import { useAnnouncementsQuery } from "../../../services/announcements";
+import { Announcement as AnnouncementType } from "../../../types/types";
 
 export default function HomeScreen() {
+  const { data: announcements, isLoading, error } = useAnnouncementsQuery();
+
+  if (isLoading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.centered}>
+        <Text style={styles.errorText}>Failed to load announcements</Text>
+      </View>
+    );
+  }
+
   return (
     <>
       <ParallaxScrollView
@@ -44,13 +46,13 @@ export default function HomeScreen() {
         <Text style={styles.sectionTitle}>Announcements</Text>
 
         <View style={{ marginTop: -80, zIndex: 99 }}>
-          {dummyData.map((item) => (
-            <View key={item.id} style={styles.announcementContainer}>
+          {announcements?.map((item: AnnouncementType) => (
+            <View key={item._id} style={styles.announcementContainer}>
               <Announcement
                 title={item.title}
-                description={item.description}
-                date={item.date}
-                imageUrl={item.imageUrl}
+                description={item.content}
+                date={item.createdAt}
+                imageUrl={item.imageUrl as ImageSourcePropType}
               />
             </View>
           ))}
@@ -59,7 +61,6 @@ export default function HomeScreen() {
     </>
   );
 }
-
 const styles = StyleSheet.create({
   headerImage: {
     height: 500,
@@ -96,5 +97,14 @@ const styles = StyleSheet.create({
   },
   announcementContainer: {
     marginBottom: 16,
+  },
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  errorText: {
+    fontSize: 18,
+    color: "red",
   },
 });

@@ -1,4 +1,4 @@
-import SignUpScreen from "../../components/screens/SignUpScreen";
+import SignUpScreen from "../../components/screens/SignUpScreen/emailsignup";
 import React from "react";
 
 type Props = {};
