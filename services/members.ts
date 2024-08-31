@@ -7,6 +7,36 @@ const fetchMembers = async (): Promise<User[]> => {
   return data;
 };
 
+// Fetch the number of members accepted this week
+const fetchAcceptedThisWeek = async (): Promise<number> => {
+  const { data } = await axios.get(
+    "http://localhost:5050/admin/accepted-members/this-week"
+  );
+  return data.acceptedThisWeek;
+};
+
+// Fetch the number of members accepted this month
+const fetchAcceptedThisMonth = async (): Promise<number> => {
+  const { data } = await axios.get(
+    "http://localhost:5050/admin/accepted-members/this-month"
+  );
+  return data.acceptedThisMonth;
+};
+
+export const useAcceptedThisWeekQuery = () => {
+  return useQuery<number>({
+    queryKey: ["acceptedThisWeek"],
+    queryFn: fetchAcceptedThisWeek,
+  });
+};
+
+export const useAcceptedThisMonthQuery = () => {
+  return useQuery<number>({
+    queryKey: ["acceptedThisMonth"],
+    queryFn: fetchAcceptedThisMonth,
+  });
+};
+
 export const useMembersQuery = () => {
   return useQuery<User[]>({
     queryKey: ["members"],
@@ -21,8 +51,10 @@ export const useAcceptMemberMutation = () => {
     mutationFn: (userId: string) =>
       axios.put(`http://localhost:5050/admin/accept/${userId}`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["members"] }); // Wrap the string in an array
-      queryClient.invalidateQueries({ queryKey: ["pendingMembers"] }); // Wrap the string in an array
+      queryClient.invalidateQueries({ queryKey: ["members"] });
+      queryClient.invalidateQueries({ queryKey: ["pendingMembers"] });
+      queryClient.invalidateQueries({ queryKey: ["acceptedThisWeek"] }); // Invalidate the query for accepted members this week
+      queryClient.invalidateQueries({ queryKey: ["acceptedThisMonth"] });
     },
     onError: () => {
       alert("Error accepting member");
@@ -36,8 +68,10 @@ export const useDenyMemberMutation = () => {
     mutationFn: (userId: string) =>
       axios.put(`http://localhost:5050/admin/deny/${userId}`),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["members"] }); // Wrap the string in an array
-      queryClient.invalidateQueries({ queryKey: ["pendingMembers"] }); // Wrap the string in an array
+      queryClient.invalidateQueries({ queryKey: ["members"] });
+      queryClient.invalidateQueries({ queryKey: ["pendingMembers"] });
+      queryClient.invalidateQueries({ queryKey: ["acceptedThisWeek"] }); // Invalidate the query for accepted members this week
+      queryClient.invalidateQueries({ queryKey: ["acceptedThisMonth"] });
     },
     onError: () => {
       alert("Error denying member");

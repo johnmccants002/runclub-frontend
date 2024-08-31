@@ -1,15 +1,24 @@
 import { palette } from "@/constants/Colors";
 import { FontAwesome5, Entypo, FontAwesome6 } from "@expo/vector-icons";
 import React, { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
 import { useAssets } from "expo-asset";
 import { ResizeMode, Video } from "expo-av";
+import {
+  useAcceptedThisWeekQuery,
+  useAcceptedThisMonthQuery,
+} from "@/services/members";
 
 type Props = {};
 
 const KPIHeader = (props: Props) => {
   const [assets] = useAssets([require("@/assets/videos/Park.mp4")]);
   const [videoLoaded, setVideoLoaded] = useState(false);
+  // Use the hooks to fetch the number of accepted members
+  const { data: acceptedThisWeek, isLoading: loadingWeek } =
+    useAcceptedThisWeekQuery();
+  const { data: acceptedThisMonth, isLoading: loadingMonth } =
+    useAcceptedThisMonthQuery();
 
   return (
     <>
@@ -29,12 +38,20 @@ const KPIHeader = (props: Props) => {
           <View style={styles.kpi}>
             <FontAwesome6 name="users-rectangle" size={24} color="black" />
             <Text style={styles.text}>New Members This Week</Text>
-            <Text style={styles.metricText}>+25</Text>
+            {loadingWeek ? (
+              <ActivityIndicator color="black" />
+            ) : (
+              <Text style={styles.metricText}>+{acceptedThisWeek}</Text>
+            )}
           </View>
           <View style={styles.kpi}>
             <FontAwesome6 name="users-rectangle" size={24} color="black" />
             <Text style={styles.text}>New Members This Month</Text>
-            <Text style={styles.metricText}>+20</Text>
+            {loadingMonth ? (
+              <ActivityIndicator color="black" />
+            ) : (
+              <Text style={styles.metricText}>+{acceptedThisMonth}</Text>
+            )}
           </View>
         </View>
         <View style={{ flexDirection: "row", gap: 20 }}>
