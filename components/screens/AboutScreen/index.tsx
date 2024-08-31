@@ -35,6 +35,12 @@ const DATA = [
     icon: "person",
     route: "/about/members",
   },
+  {
+    id: "4",
+    title: "Pending Members",
+    icon: "list",
+    route: "/about/pending-members",
+  },
 ];
 
 export default function AboutSectionScreen() {

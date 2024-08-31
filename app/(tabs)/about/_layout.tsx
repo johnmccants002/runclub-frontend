@@ -30,6 +30,13 @@ const Layout = (props: Props) => {
           headerTitle: "Members",
         }}
       />
+      <Stack.Screen
+        name="pending-members"
+        options={{
+          headerBackTitleVisible: false,
+          headerTitle: "Pending",
+        }}
+      />
     </Stack>
   );
 };

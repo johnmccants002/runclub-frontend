@@ -12,8 +12,8 @@ const MemberCard: React.FC<MemberCardProps> = ({ member }) => {
       <Image
         source={{
           uri: member.profile?.instagram
-            ? "https://i.imgur.com/wsyk4NE.png"
-            : "https://i.imgur.com/wsyk4NE.png",
+            ? "https://i.imgur.com/XJGQoa5.png"
+            : "https://i.imgur.com/XJGQoa5.png",
         }} // Assuming Instagram is used for the profile image
         style={styles.image}
         resizeMode="contain"
