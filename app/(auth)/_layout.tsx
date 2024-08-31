@@ -14,7 +14,6 @@ const Layout = (props: Props) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   useEffect(() => {
-    console.log("IN USE EFFECT", isAdmin, isAuthenticated);
     if (isAdmin && isAuthenticated) {
       router.replace("/admin/");
     } else if (!isAdmin && isAuthenticated) {

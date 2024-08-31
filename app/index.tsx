@@ -11,6 +11,8 @@ const Screen: React.FC<Props> = () => {
   const [loading, setLoading] = useState(true);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const initializeAuth = useAuthStore((state) => state.initializeAuth);
+  const user = useAuthStore((state) => state.user);
+  const isAdmin = useAuthStore((state) => state.isAdmin);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -18,8 +20,10 @@ const Screen: React.FC<Props> = () => {
       setLoading(false);
     };
 
+    console.log(JSON.stringify(user), "THIS IS THE USER");
+
     checkAuth();
-  }, [initializeAuth]);
+  }, [initializeAuth, user]);
 
   if (loading) {
     return (
@@ -36,7 +40,9 @@ const Screen: React.FC<Props> = () => {
 
   return (
     <>
-      {isAuthenticated ? (
+      {isAuthenticated && user.isAdmin ? (
+        <Redirect href={"/admin/(tabs)/"} />
+      ) : isAuthenticated && !user.isAdmin ? (
         <Redirect href={"/(tabs)/"} />
       ) : (
         <Redirect href={"/(auth)/landing"} />

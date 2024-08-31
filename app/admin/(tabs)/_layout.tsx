@@ -1,10 +1,9 @@
-import { Link, Tabs, useRouter } from "expo-router";
+import { Tabs, useRouter } from "expo-router";
 import React, { useEffect } from "react";
 
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { Pressable, Text } from "react-native";
 import useAuthStore from "@/stores/auth";
 
 export default function TabLayout() {
@@ -28,12 +27,12 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="(home)"
+        name="(feed)"
         options={{
-          title: "Home",
+          title: "Feed",
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "home" : "home-outline"}
+              name={focused ? "menu" : "menu-outline"}
               color={color}
             />
           ),
@@ -43,11 +42,11 @@ export default function TabLayout() {
       <Tabs.Screen
         name="about"
         options={{
-          title: "About",
+          title: "Run Club",
 
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
-              name={focused ? "code-slash" : "code-slash-outline"}
+              name={focused ? "fitness" : "fitness-outline"}
               color={color}
             />
           ),

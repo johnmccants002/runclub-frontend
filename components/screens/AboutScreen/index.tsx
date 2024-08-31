@@ -1,14 +1,16 @@
+import KPIHeader from "@/components/KPIHeader";
+import useAuthStore from "@/stores/auth";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
 import React from "react";
 import {
-  View,
-  Text,
-  Image,
-  StyleSheet,
   FlatList,
+  Image,
   Pressable,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { Link, useRouter } from "expo-router";
 
 const DATA = [
   {
@@ -29,18 +31,7 @@ const DATA = [
     icon: "notifications-outline",
     route: "/about/contact",
   },
-  {
-    id: "4",
-    title: "Run Club Members",
-    icon: "person",
-    route: "/about/members",
-  },
-  {
-    id: "5",
-    title: "Pending Members",
-    icon: "list",
-    route: "/about/pending-members",
-  },
+
   {
     id: "6",
     title: "Settings",
@@ -49,8 +40,49 @@ const DATA = [
   },
 ];
 
+const ADMIN_DATA = [
+  {
+    id: "1",
+    title: "Contact Us",
+    icon: "call-outline",
+    route: "/admin/about/contact",
+  },
+  {
+    id: "2",
+    title: "About Us",
+    icon: "information-circle-outline",
+    route: "/admin/about/aboutus",
+  },
+  {
+    id: "3",
+    title: "Notifications",
+    icon: "notifications-outline",
+    route: "/admin/about/contact",
+  },
+  {
+    id: "4",
+    title: "Run Club Members",
+    icon: "person",
+    route: "/admin/about/members",
+  },
+  {
+    id: "5",
+    title: "Pending Members",
+    icon: "list",
+    route: "/admin/about/pending-members",
+  },
+  {
+    id: "6",
+    title: "Settings",
+    icon: "settings",
+    route: "/admin/about/settings",
+  },
+];
+
 export default function AboutSectionScreen() {
   const router = useRouter();
+
+  const isAdmin = useAuthStore((state) => state.isAdmin);
   const renderItem = ({ item }) => (
     <Pressable
       style={styles.itemContainer}
@@ -67,14 +99,18 @@ export default function AboutSectionScreen() {
   return (
     <View style={styles.container}>
       {/* Header Image */}
-      <Image
-        source={require("@/assets/images/group.jpg")}
-        style={styles.headerImage}
-      />
+      {isAdmin ? (
+        <KPIHeader />
+      ) : (
+        <Image
+          source={require("@/assets/images/group.jpg")}
+          style={styles.headerImage}
+        />
+      )}
 
       {/* FlatList */}
       <FlatList
-        data={DATA}
+        data={isAdmin ? ADMIN_DATA : DATA}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContent}
