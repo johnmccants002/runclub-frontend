@@ -37,6 +37,13 @@ const Layout = (props: Props) => {
           headerTitle: "Pending",
         }}
       />
+      <Stack.Screen
+        name="settings"
+        options={{
+          headerBackTitleVisible: false,
+          headerTitle: "",
+        }}
+      />
     </Stack>
   );
 };

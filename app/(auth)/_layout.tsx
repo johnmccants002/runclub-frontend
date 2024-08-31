@@ -1,13 +1,23 @@
+import useAuthStore from "@/stores/auth";
 import { Colors } from "../../constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { Link, Stack, useRouter } from "expo-router";
-import React from "react";
+import React, { useEffect } from "react";
 import { TouchableOpacity } from "react-native";
 
 type Props = {};
 
 const Layout = (props: Props) => {
   const router = useRouter();
+
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      router.replace("/(tabs)/");
+    }
+  }, [isAuthenticated]);
+
   return (
     <Stack>
       <Stack.Screen name="landing" options={{ headerShown: false }} />

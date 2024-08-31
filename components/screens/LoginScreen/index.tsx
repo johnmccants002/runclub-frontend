@@ -1,47 +1,46 @@
-import React from "react";
-import { Colors } from "../../../constants/Colors";
-import { defaultStyles } from "../../../constants/Styles";
-import { Ionicons } from "@expo/vector-icons";
-import { Link, useRouter } from "expo-router";
-import { useState } from "react";
+import { useRouter } from "expo-router";
+import React, { useState } from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
   Alert,
-  Button,
 } from "react-native";
+import { Colors } from "../../../constants/Colors";
+import { defaultStyles } from "../../../constants/Styles";
+import { useLoginMutation } from "../../../services/auth"; // Adjust the path according to your project structure
 
 type Props = {};
 
-enum SignInType {
-  Phone,
-  Email,
-  Google,
-  Apple,
-}
-
 const LoginScreen = (props: Props) => {
-  const [countryCode, setCountryCode] = useState("+49");
-  const [phoneNumber, setPhoneNumber] = useState("");
-  const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const keyboardVerticalOffset = Platform.OS === "ios" ? 80 : 0;
+  const router = useRouter();
+  const loginMutation = useLoginMutation();
 
   async function signInWithEmail() {
-    // setLoading(true);
-    // const { error } = await supabase.auth.signInWithPassword({
-    //   email,
-    //   password,
-    // });
-    // if (error) Alert.alert(error.message);
-    // setLoading(false);
+    if (!email || !password) {
+      Alert.alert("Please enter both email and password.");
+      return;
+    }
+
+    loginMutation.mutate(
+      { email, password },
+      {
+        onSuccess: () => {},
+        onError: (error) => {
+          Alert.alert(
+            "Login failed",
+            "Please check your credentials and try again."
+          );
+        },
+      }
+    );
   }
 
   return (
@@ -53,7 +52,7 @@ const LoginScreen = (props: Props) => {
       <View style={defaultStyles.container}>
         <Text style={defaultStyles.header}>Welcome back</Text>
         <Text style={defaultStyles.descriptionText}>
-          Enter the phone number associated with your account
+          Enter your email and password to sign in
         </Text>
         <View style={styles.inputContainer}>
           <View style={{ gap: 20 }}>
@@ -64,6 +63,9 @@ const LoginScreen = (props: Props) => {
                 onChangeText={setEmail}
                 placeholder="jon@gmail.com"
                 style={styles.input}
+                keyboardType="email-address"
+                autoCapitalize="none"
+                autoCorrect={false}
               />
             </View>
 
@@ -72,7 +74,7 @@ const LoginScreen = (props: Props) => {
               <TextInput
                 value={password}
                 onChangeText={setPassword}
-                placeholder=""
+                placeholder="Enter your password"
                 style={styles.input}
                 secureTextEntry
               />
@@ -83,10 +85,11 @@ const LoginScreen = (props: Props) => {
             <TouchableOpacity
               style={[
                 defaultStyles.pillButton,
-                phoneNumber !== "" ? styles.enabled : styles.disabled,
+                email && password ? styles.enabled : styles.disabled,
                 { marginBottom: 20 },
               ]}
-              onPress={() => signInWithEmail()}
+              onPress={signInWithEmail}
+              disabled={loginMutation.isLoading}
             >
               <Text style={defaultStyles.buttonText}>Sign In</Text>
             </TouchableOpacity>
@@ -114,11 +117,7 @@ const LoginScreen = (props: Props) => {
             </View>
 
             <TouchableOpacity
-              style={[
-                defaultStyles.pillButton,
-                phoneNumber !== "" ? styles.enabled : styles.disabled,
-                { marginBottom: 20 },
-              ]}
+              style={[defaultStyles.pillButton, { marginBottom: 20 }]}
               onPress={() => router.push("/(auth)/signup")}
             >
               <Text style={defaultStyles.buttonText}>Sign Up</Text>

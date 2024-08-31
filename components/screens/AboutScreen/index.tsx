@@ -36,10 +36,16 @@ const DATA = [
     route: "/about/members",
   },
   {
-    id: "4",
+    id: "5",
     title: "Pending Members",
     icon: "list",
     route: "/about/pending-members",
+  },
+  {
+    id: "6",
+    title: "Settings",
+    icon: "settings",
+    route: "/about/settings",
   },
 ];
 
