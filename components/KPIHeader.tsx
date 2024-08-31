@@ -86,8 +86,8 @@ const styles = StyleSheet.create({
     color: palette.mainBlue,
   },
   video: {
-    width: "100%",
-    height: 400,
+    width: 600,
+    height: 500,
     position: "absolute",
   },
 });
