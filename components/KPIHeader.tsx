@@ -87,8 +87,9 @@ const styles = StyleSheet.create({
   },
   video: {
     width: 600,
-    height: 500,
+    height: 620,
     position: "absolute",
+    top: -100,
   },
 });
 
