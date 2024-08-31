@@ -14,7 +14,6 @@ import { useRouter } from "expo-router";
 
 const SettingsScreen: React.FC = () => {
   const logout = useAuthStore((state) => state.logout);
-  const router = useRouter();
 
   const handleLogout = () => {
     Alert.alert("Logout", "Are you sure you want to logout?", [
@@ -24,7 +23,6 @@ const SettingsScreen: React.FC = () => {
         style: "destructive",
         onPress: () => {
           logout();
-          // Redirect to the login screen or home screen
         },
       },
     ]);

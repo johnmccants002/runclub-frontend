@@ -13,7 +13,14 @@ const Layout = (props: Props) => {
         name="index"
         options={{
           headerTransparent: true,
-
+          headerRight: () => (
+            <Pressable
+              onPress={() => router.push("/(home)/create-announcement")}
+              style={{ alignSelf: "center" }}
+            >
+              <Ionicons name="add-circle" size={32} color={"white"} />
+            </Pressable>
+          ),
           headerTitle: "",
         }}
       />

@@ -6,6 +6,7 @@ const useAuthStore = create((set) => ({
   token: null,
   isAuthenticated: false,
   authLoading: false,
+  isAdmin: false,
 
   setToken: async (token) => {
     if (Platform.OS === "web") {
@@ -23,6 +24,7 @@ const useAuthStore = create((set) => ({
     }
     set({ token, isAuthenticated: !!token });
   },
+  setAdmin: (isAdmin) => set({ isAdmin }),
 
   initializeAuth: async () => {
     let token;
@@ -42,7 +44,7 @@ const useAuthStore = create((set) => ({
     } else {
       await SecureStore.deleteItemAsync("authToken");
     }
-    set({ token: null, isAuthenticated: false });
+    set({ token: null, isAuthenticated: false, isAdmin: false });
   },
 }));
 

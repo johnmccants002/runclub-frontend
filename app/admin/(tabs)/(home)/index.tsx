@@ -1,6 +1,6 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet, Text } from "react-native";
 
-import Announcements from "../../../components/screens/AnnouncementsScreen";
+import Announcements from "@/components/screens/AnnouncementsScreen";
 
 export default function HomeScreen() {
   return <Announcements />;

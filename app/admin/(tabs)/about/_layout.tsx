@@ -23,6 +23,27 @@ const Layout = (props: Props) => {
           headerTitle: "",
         }}
       />
+      <Stack.Screen
+        name="members"
+        options={{
+          headerBackTitleVisible: false,
+          headerTitle: "Members",
+        }}
+      />
+      <Stack.Screen
+        name="pending-members"
+        options={{
+          headerBackTitleVisible: false,
+          headerTitle: "Pending",
+        }}
+      />
+      <Stack.Screen
+        name="settings"
+        options={{
+          headerBackTitleVisible: false,
+          headerTitle: "",
+        }}
+      />
     </Stack>
   );
 };

@@ -32,7 +32,9 @@ const LoginScreen = (props: Props) => {
     loginMutation.mutate(
       { email, password },
       {
-        onSuccess: () => {},
+        onSuccess: () => {
+          console.log("SUCCESS LOGGING IN");
+        },
         onError: (error) => {
           Alert.alert(
             "Login failed",

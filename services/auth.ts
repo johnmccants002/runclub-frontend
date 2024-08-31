@@ -8,6 +8,21 @@ interface LoginParams {
   password: string;
 }
 
+interface LoginResponse {
+  message: string;
+  token: string;
+  refreshToken: string;
+  user: User;
+}
+
+interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  isAdmin: boolean;
+}
+
 // Define a type for the login response data
 interface LoginResponse {
   token: string;
@@ -19,7 +34,7 @@ interface LogoutResponse {
 }
 
 export const useLoginMutation = () => {
-  const { setToken, setAuthLoading } = useAuthStore();
+  const { setToken, setAuthLoading, setAdmin } = useAuthStore();
 
   return useMutation<LoginResponse, Error, LoginParams>({
     mutationFn: async ({ email, password }: LoginParams) => {
@@ -35,6 +50,7 @@ export const useLoginMutation = () => {
     },
     onSuccess: (data) => {
       setToken(data.token);
+      setAdmin(data.user.isAdmin);
       setAuthLoading(false);
     },
     onError: (error) => {

@@ -10,13 +10,17 @@ type Props = {};
 const Layout = (props: Props) => {
   const router = useRouter();
 
+  const isAdmin = useAuthStore((state) => state.isAdmin);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
 
   useEffect(() => {
-    if (isAuthenticated) {
+    console.log("IN USE EFFECT", isAdmin, isAuthenticated);
+    if (isAdmin && isAuthenticated) {
+      router.replace("/admin/");
+    } else if (!isAdmin && isAuthenticated) {
       router.replace("/(tabs)/");
     }
-  }, [isAuthenticated]);
+  }, [isAdmin, isAuthenticated]);
 
   return (
     <Stack>
