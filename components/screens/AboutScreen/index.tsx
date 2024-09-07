@@ -1,8 +1,11 @@
 import KPIHeader from "@/components/KPIHeader";
+import { Colors } from "@/constants/Colors";
 import useAuthStore from "@/stores/auth";
 import { Ionicons } from "@expo/vector-icons";
+import axios from "axios";
+import { BlurView } from "expo-blur";
 import { useRouter } from "expo-router";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   FlatList,
   Image,
@@ -83,6 +86,35 @@ export default function AboutSectionScreen() {
   const router = useRouter();
 
   const isAdmin = useAuthStore((state) => state.isAdmin);
+  const user = useAuthStore((state) => state.user);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        if (!user?.userId) {
+          console.warn("No valid userId found");
+          return;
+        }
+
+        // Replace localhost with your machine's IP address if testing on mobile devices
+        const response = await axios.get(
+          `http://localhost:5050/users/${user.userId}`
+        );
+
+        // Log the fetched user data
+        console.log(response.data);
+        setCurrentUser(response.data);
+      } catch (error) {
+        console.error("Error fetching current user:", error);
+      }
+    };
+
+    if (user?.userId) {
+      fetchCurrentUser();
+    }
+  }, [user?.userId]); // Ensure that the effect runs only when `userId` changes
+
   const renderItem = ({ item }) => (
     <Pressable
       style={styles.itemContainer}
@@ -99,13 +131,27 @@ export default function AboutSectionScreen() {
   return (
     <View style={styles.container}>
       {/* Header Image */}
+      <View style={styles.backgroundCover}></View>
+
       {isAdmin ? (
         <KPIHeader />
       ) : (
-        <Image
-          source={require("@/assets/images/group.jpg")}
-          style={styles.headerImage}
-        />
+        <View style={styles.header}>
+          <Image
+            source={require("@/assets/images/group.jpg")}
+            style={styles.avatar}
+          />
+          <View style={styles.info}>
+            <View style={styles.infoDescription}>
+              <Text style={styles.numberText}>
+                {currentUser?.firstName} {currentUser?.lastName}
+              </Text>
+              <Text style={styles.numberText}>
+                Favorite Brunch Spot: 58 & Holding
+              </Text>
+            </View>
+          </View>
+        </View>
       )}
 
       {/* FlatList */}
@@ -123,6 +169,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#f0f0f0",
+    justifyContent: "flex-start",
+    alignItems: "center",
+    paddingTop: 120,
   },
   headerImage: {
     width: "100%",
@@ -151,5 +200,49 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginLeft: 10,
     color: "#333",
+  },
+  avatar: {
+    width: 160,
+    height: 160,
+    borderRadius: 80,
+  },
+  header: {
+    flexDirection: "column",
+    alignItems: "center",
+    gap: 4,
+    height: 300,
+  },
+  info: {
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: 20,
+    marginVertical: 10,
+  },
+  infoDescription: {
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  numberText: {
+    fontFamily: "PilcrowRounded",
+    fontSize: 18,
+    color: "black",
+  },
+  blurContainer: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    height: 400,
+    top: 0,
+  },
+  backgroundCover: {
+    position: "absolute",
+    left: 0,
+    height: 200,
+    right: 0,
+    top: 0,
+    backgroundColor: Colors.primary.gray,
+    borderBottomLeftRadius: 8,
+    borderBottomRightRadius: 8,
   },
 });
