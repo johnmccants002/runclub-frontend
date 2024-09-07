@@ -97,12 +97,10 @@ export default function AboutSectionScreen() {
           return;
         }
 
-        // Replace localhost with your machine's IP address if testing on mobile devices
         const response = await axios.get(
           `http://localhost:5050/users/${user.userId}`
         );
 
-        // Log the fetched user data
         console.log(response.data);
         setCurrentUser(response.data);
       } catch (error) {

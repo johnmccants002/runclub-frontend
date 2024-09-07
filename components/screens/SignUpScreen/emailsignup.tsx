@@ -47,7 +47,8 @@ const SignUpScreen: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  const [tos, setTos] = useState<boolean>(false);
+  const [tosAccepted, setTosAccepted] = useState<boolean>(false);
+  const [emailList, setEmailList] = useState<boolean>(false);
 
   const handleSignup = () => {
     if (!email || !password || !firstName || !lastName || !confirmPassword) {
@@ -60,7 +61,7 @@ const SignUpScreen: React.FC = () => {
     }
 
     registerMutation.mutate(
-      { email, password, firstName, lastName },
+      { email, password, firstName, lastName, emailList, tosAccepted },
       {
         onSuccess: () => {
           Alert.alert("Success", "You have registered successfully.");
@@ -180,12 +181,42 @@ const SignUpScreen: React.FC = () => {
             <Text style={styles.errorText}>{errorMessage}</Text>
           ) : null}
 
-          <View style={{ gap: 12, width: width, alignItems: "center" }}>
+          <View
+            style={{
+              gap: 12,
+              width: width,
+              alignItems: "flex-start",
+              justifyContent: "flex-start",
+              paddingHorizontal: 40,
+            }}
+          >
             <View
               style={{
                 flexDirection: "row",
                 gap: 20,
-                alignItems: "center",
+                alignItems: "flex-start",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text
+                style={{
+                  color: "blue",
+                  fontWeight: "bold",
+                }}
+              >
+                Join Email List 🏃‍♂️
+              </Text>
+
+              <Checkbox
+                value={emailList}
+                onValueChange={() => setEmailList(!emailList)}
+              />
+            </View>
+            <View
+              style={{
+                flexDirection: "row",
+                gap: 20,
+                alignItems: "flex-start",
                 justifyContent: "space-between",
               }}
             >
@@ -200,7 +231,10 @@ const SignUpScreen: React.FC = () => {
                 </Text>
               </Pressable>
 
-              <Checkbox value={tos} onValueChange={() => setTos(!tos)} />
+              <Checkbox
+                value={tosAccepted}
+                onValueChange={() => setTosAccepted(!tosAccepted)}
+              />
             </View>
             <Pressable style={styles.button} onPress={handleSignup}>
               <Text style={styles.buttonText}>Create Account</Text>

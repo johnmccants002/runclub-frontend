@@ -21,12 +21,13 @@ interface SignUpResponse {
   refreshToken: string;
   user: User;
 }
-
 interface SignUpParams {
   firstName: string;
   lastName: string;
   email: string;
   password: string;
+  tosAccepted: boolean; // Added
+  emailList: boolean; // Added
 }
 
 interface User {
@@ -82,19 +83,18 @@ export const useRegisterMutation = () => {
     mutationFn: async (userData: SignUpParams): Promise<SignUpResponse> => {
       setAuthLoading(true);
 
-      // Return the axios post response to ensure the Promise resolves with the expected type
+      // Send the registration data including tosAccepted and emailList
       const { data } = await axios.post<SignUpResponse>(
         "http://localhost:5050/auth/signup",
         userData
       );
 
-      return data; // This ensures that the response is a Promise<SignUpResponse>
+      return data;
     },
     onSuccess: (data) => {
       setAuthLoading(false);
       setToken(data.token);
       setAdmin(data.user.isAdmin);
-      setAuthLoading(false);
     },
     onError: (error) => {
       setAuthLoading(false);
