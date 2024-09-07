@@ -18,7 +18,39 @@ const CreateAnnouncementScreen: React.FC = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [imageUri, setImageUri] = useState<string | null>(null);
+  const [photo, setPhoto] = useState(null);
   const userId = "66cea48dded84be71dcb04de";
+
+  async function uploadPhoto(file) {
+    const { name, uri, type } = file;
+    console.log(name);
+    console.log(uri);
+    console.log(type);
+
+    // Fetch the file from its URI and convert it to Blob
+    const response = await fetch(uri);
+    const blob = await response.blob();
+
+    // Create form data and append the Blob with a name
+    const formData = new FormData();
+    formData.append("photo", blob, name); // Blob is the second parameter, and 'name' is the filename
+
+    console.log("ABOUT TO CALL FUNCTION", name);
+
+    // Upload to the server
+    const uploadResponse = await fetch(
+      `http://localhost:5050/users/upload-image`,
+      {
+        method: "POST",
+        body: formData,
+        headers: {
+          "Content-Type": "multipart/form-data", // You may or may not need this depending on how the server parses form data
+        },
+      }
+    );
+
+    if (uploadResponse.status === 200) return uploadResponse;
+  }
 
   const addAnnouncementMutation = useAddAnnouncementMutation();
 
@@ -63,8 +95,23 @@ const CreateAnnouncementScreen: React.FC = () => {
       quality: 1,
     });
 
+    console.log("FJDSKLFSDJlk");
+
     if (!result.canceled) {
+      console.log("RESULT NOT CANCELLED");
+      let uri = result.assets[0].uri;
+
+      console.log("THIS IS THE URI", uri);
+
+      let file = {
+        name: uri.split("/").pop(),
+        uri,
+        type: "image/jpeg",
+      };
       setImageUri(result.assets[0].uri || null);
+      setPhoto(file);
+      console.log("WE ARE HERE", uri);
+      await uploadPhoto(file);
     }
   };
 

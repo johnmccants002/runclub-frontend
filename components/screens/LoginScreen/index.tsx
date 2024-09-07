@@ -98,25 +98,7 @@ const LoginScreen = (props: Props) => {
 
             <View
               style={{ flexDirection: "row", alignItems: "center", gap: 16 }}
-            >
-              <View
-                style={{
-                  flex: 1,
-                  height: StyleSheet.hairlineWidth,
-                  backgroundColor: Colors.primary.gray,
-                }}
-              />
-              <Text style={{ color: Colors.primary.gray, fontSize: 20 }}>
-                or
-              </Text>
-              <View
-                style={{
-                  flex: 1,
-                  height: StyleSheet.hairlineWidth,
-                  backgroundColor: Colors.primary.gray,
-                }}
-              />
-            </View>
+            ></View>
 
             <TouchableOpacity
               style={[defaultStyles.pillButton, { marginBottom: 20 }]}

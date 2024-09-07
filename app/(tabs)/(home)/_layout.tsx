@@ -6,7 +6,6 @@ import { Pressable, Text } from "react-native";
 type Props = {};
 
 const Layout = (props: Props) => {
-  const router = useRouter();
   return (
     <Stack>
       <Stack.Screen

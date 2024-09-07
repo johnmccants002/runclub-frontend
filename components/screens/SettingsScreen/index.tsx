@@ -1,19 +1,20 @@
+import { useDeleteUserMutation } from "@/services/user";
 import React from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
   Alert,
   ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
 import { Colors, palette } from "../../../constants/Colors";
-import { defaultStyles } from "../../../constants/Styles";
 import useAuthStore from "../../../stores/auth"; // Adjust the path according to your project structure
-import { useRouter } from "expo-router";
 
 const SettingsScreen: React.FC = () => {
   const logout = useAuthStore((state) => state.logout);
+  const user = useAuthStore((state) => state.user);
+  const deleteUserMutation = useDeleteUserMutation();
 
   const handleLogout = () => {
     Alert.alert("Logout", "Are you sure you want to logout?", [
@@ -38,8 +39,18 @@ const SettingsScreen: React.FC = () => {
           text: "Delete",
           style: "destructive",
           onPress: () => {
-            // Implement account deletion logic here
-            Alert.alert("Account Deleted", "Your account has been deleted.");
+            // Call the mutation to delete the user account
+            deleteUserMutation.mutate(user.userId, {
+              onSuccess: () => {
+                // Optional: Add a success notification or redirect logic here
+                logout();
+                console.log("Account deleted successfully");
+              },
+              onError: (error) => {
+                // Optional: Handle error case
+                console.error("Failed to delete account", error);
+              },
+            });
           },
         },
       ]
