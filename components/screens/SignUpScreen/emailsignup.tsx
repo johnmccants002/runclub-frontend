@@ -16,6 +16,8 @@ import {
 import { useRegisterMutation } from "../../../services/auth";
 import useAuthStore from "../../../stores/auth";
 import Checkbox from "expo-checkbox";
+import { useRouter } from "expo-router";
+import * as WebBrowser from "expo-web-browser";
 
 const { width, height } = Dimensions.get("window");
 
@@ -36,6 +38,7 @@ const colors = {
 const SignUpScreen: React.FC = () => {
   const { authLoading } = useAuthStore();
   const registerMutation = useRegisterMutation();
+  const router = useRouter();
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -66,6 +69,12 @@ const SignUpScreen: React.FC = () => {
           setErrorMessage("Registration failed. Please try again.");
         },
       }
+    );
+  };
+
+  const handleTOSPressed = async () => {
+    await WebBrowser.openBrowserAsync(
+      "https://runclub-nextjs-sanity.vercel.app/terms-of-service"
     );
   };
 
@@ -180,7 +189,17 @@ const SignUpScreen: React.FC = () => {
                 justifyContent: "space-between",
               }}
             >
-              <Text>Accept Terms of Service</Text>
+              <Pressable onPress={handleTOSPressed}>
+                <Text
+                  style={{
+                    textDecorationLine: "underline",
+                    color: "blue",
+                  }}
+                >
+                  Accept Terms of Service
+                </Text>
+              </Pressable>
+
               <Checkbox value={tos} onValueChange={() => setTos(!tos)} />
             </View>
             <Pressable style={styles.button} onPress={handleSignup}>
