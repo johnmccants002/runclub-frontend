@@ -15,6 +15,20 @@ interface LoginResponse {
   user: User;
 }
 
+interface SignUpResponse {
+  message: string;
+  token: string;
+  refreshToken: string;
+  user: User;
+}
+
+interface SignUpParams {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+}
+
 interface User {
   id: string;
   firstName: string;
@@ -62,14 +76,24 @@ export const useLoginMutation = () => {
 };
 
 export const useRegisterMutation = () => {
-  const { setAuthLoading } = useAuthStore();
+  const { setToken, setAuthLoading, setAdmin } = useAuthStore();
 
-  return useMutation({
-    mutationFn: async (userData) => {
+  return useMutation<SignUpResponse, Error, SignUpParams>({
+    mutationFn: async (userData: SignUpParams): Promise<SignUpResponse> => {
       setAuthLoading(true);
-      await axios.post("http://localhost:5050/auth/signup", userData);
+
+      // Return the axios post response to ensure the Promise resolves with the expected type
+      const { data } = await axios.post<SignUpResponse>(
+        "http://localhost:5050/auth/signup",
+        userData
+      );
+
+      return data; // This ensures that the response is a Promise<SignUpResponse>
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      setAuthLoading(false);
+      setToken(data.token);
+      setAdmin(data.user.isAdmin);
       setAuthLoading(false);
     },
     onError: (error) => {
