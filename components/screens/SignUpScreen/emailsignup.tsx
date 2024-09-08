@@ -89,7 +89,8 @@ const SignUpScreen: React.FC = () => {
           style={{
             flex: 1,
             justifyContent: "space-between",
-            paddingVertical: 20,
+            paddingBottom: 20,
+            backgroundColor: "white",
           }}
         >
           <View
@@ -97,7 +98,6 @@ const SignUpScreen: React.FC = () => {
               height: height * 0.6,
               justifyContent: "center",
               gap: 20,
-              marginTop: 40,
             }}
           >
             <View style={{ gap: 16 }}>
@@ -253,21 +253,21 @@ const SignUpScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "flex-start",
     alignItems: "center",
     paddingHorizontal: 20,
+    backgroundColor: "white",
   },
   inputContainer: {
     borderColor: colors.neutral["200"],
     borderWidth: 1,
-    height: 80,
+    height: 60,
     width: width * 0.9,
     alignSelf: "center",
     borderRadius: 16,
     justifyContent: "center",
     paddingHorizontal: 12,
     gap: 4,
-    paddingVertical: 4,
   },
   input: {
     flex: 1,

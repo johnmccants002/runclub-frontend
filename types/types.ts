@@ -34,3 +34,22 @@ export interface CreateAnnouncementInput {
   imageUrl?: string; // Optional field
   userId: string;
 }
+export interface Event {
+  _id: string;
+  createdBy: string;
+  title: string;
+  details: string;
+  startTime: string;
+  endTime: string;
+  photo?: string;
+  createdAt: string;
+}
+
+export interface CreateEventInput {
+  title: string;
+  details: string;
+  startTime: string;
+  endTime: string;
+  photo?: string;
+  createdBy: string;
+}

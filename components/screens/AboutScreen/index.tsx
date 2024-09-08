@@ -37,6 +37,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { BASE_URL } from "@/constants";
 
 const DATA = [
   {
@@ -103,6 +104,12 @@ const ADMIN_DATA = [
     icon: "settings",
     route: "/admin/about/settings",
   },
+  {
+    id: "7",
+    title: "Scanner",
+    icon: "camera",
+    route: "/admin/about/qr-code-scanner",
+  },
 ];
 
 export default function AboutSectionScreen() {
@@ -121,9 +128,7 @@ export default function AboutSectionScreen() {
           return;
         }
 
-        const response = await axios.get(
-          `http://localhost:5050/users/${user.userId}`
-        );
+        const response = await axios.get(`${BASE_URL}/users/${user.userId}`);
 
         console.log(response.data?.qrCode);
         setCurrentUser(response.data);
@@ -165,7 +170,7 @@ export default function AboutSectionScreen() {
         <View style={styles.header}>
           {currentUser ? (
             <QRCode
-              value={currentUser.qrCode} // This could be the userId or a URL containing the userId
+              value={currentUser._id} // This could be the userId or a URL containing the userId
               size={200} // Adjust the size of the QR code as needed
             />
           ) : (

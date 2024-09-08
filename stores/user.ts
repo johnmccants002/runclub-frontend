@@ -29,9 +29,7 @@ const useUserStore = create<UserStore>((set) => ({
 
 // Function to fetch the user data
 const fetchUser = async (userId: string): Promise<User> => {
-  const { data } = await axios.get<User>(
-    `http://localhost:5050/users/${userId}`
-  );
+  const { data } = await axios.get<User>(`${BASE_URL}/users/${userId}`);
   return data;
 };
 

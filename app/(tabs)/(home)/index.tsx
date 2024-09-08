@@ -1,9 +1,9 @@
 import { StyleSheet } from "react-native";
 
-import Announcements from "../../../components/screens/AnnouncementsScreen";
+import FutureEventsScreen from "@/components/screens/FutureEventsScreen";
 
 export default function HomeScreen() {
-  return <Announcements />;
+  return <FutureEventsScreen />;
 }
 
 const styles = StyleSheet.create({

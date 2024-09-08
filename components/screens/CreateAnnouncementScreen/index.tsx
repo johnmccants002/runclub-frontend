@@ -38,16 +38,13 @@ const CreateAnnouncementScreen: React.FC = () => {
     console.log("ABOUT TO CALL FUNCTION", name);
 
     // Upload to the server
-    const uploadResponse = await fetch(
-      `http://localhost:5050/users/upload-image`,
-      {
-        method: "POST",
-        body: formData,
-        headers: {
-          "Content-Type": "multipart/form-data", // You may or may not need this depending on how the server parses form data
-        },
-      }
-    );
+    const uploadResponse = await fetch(`${BASE_URL}/users/upload-image`, {
+      method: "POST",
+      body: formData,
+      headers: {
+        "Content-Type": "multipart/form-data", // You may or may not need this depending on how the server parses form data
+      },
+    });
 
     if (uploadResponse.status === 200) return uploadResponse;
   }

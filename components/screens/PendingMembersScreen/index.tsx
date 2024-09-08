@@ -15,11 +15,10 @@ import {
   useAcceptMemberMutation,
   useDenyMemberMutation,
 } from "@/services/members"; // Adjust path accordingly
+import { BASE_URL } from "@/constants";
 
 const fetchPendingMembers = async (): Promise<User[]> => {
-  const { data } = await axios.get(
-    "http://localhost:5050/admin/pending-members"
-  ); // Adjust URL accordingly
+  const { data } = await axios.get(`${BASE_URL}/admin/pending-members`); // Adjust URL accordingly
   return data;
 };
 

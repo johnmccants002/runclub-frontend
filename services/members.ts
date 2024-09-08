@@ -1,16 +1,17 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { User } from "@/types/types"; // Assuming Member is the same as User. Adjust if necessary.
+import { BASE_URL } from "@/constants";
 
 const fetchMembers = async (): Promise<User[]> => {
-  const { data } = await axios.get("http://localhost:5050/members");
+  const { data } = await axios.get(`${BASE_URL}/members`);
   return data;
 };
 
 // Fetch the number of members accepted this week
 const fetchAcceptedThisWeek = async (): Promise<number> => {
   const { data } = await axios.get(
-    "http://localhost:5050/admin/accepted-members/this-week"
+    `${BASE_URL}/admin/accepted-members/this-week`
   );
   return data.acceptedThisWeek;
 };
@@ -18,7 +19,7 @@ const fetchAcceptedThisWeek = async (): Promise<number> => {
 // Fetch the number of members accepted this month
 const fetchAcceptedThisMonth = async (): Promise<number> => {
   const { data } = await axios.get(
-    "http://localhost:5050/admin/accepted-members/this-month"
+    `${BASE_URL}/admin/accepted-members/this-month`
   );
   return data.acceptedThisMonth;
 };
@@ -49,7 +50,7 @@ export const useAcceptMemberMutation = () => {
 
   return useMutation({
     mutationFn: (userId: string) =>
-      axios.put(`http://localhost:5050/admin/accept/${userId}`),
+      axios.put(`${BASE_URL}/admin/accept/${userId}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["members"] });
       queryClient.invalidateQueries({ queryKey: ["pendingMembers"] });
@@ -66,7 +67,7 @@ export const useDenyMemberMutation = () => {
 
   return useMutation({
     mutationFn: (userId: string) =>
-      axios.put(`http://localhost:5050/admin/deny/${userId}`),
+      axios.put(`${BASE_URL}/admin/deny/${userId}`),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["members"] });
       queryClient.invalidateQueries({ queryKey: ["pendingMembers"] });

@@ -83,6 +83,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     position: "relative", // Ensures the container creates a stacking context
+    backgroundColor: "white",
   },
   headerWrapper: {
     position: "absolute",

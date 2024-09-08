@@ -1,9 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { Announcement, CreateAnnouncementInput } from "../types/types";
+import { BASE_URL } from "@/constants";
 
 const fetchAnnouncements = async (): Promise<Announcement[]> => {
-  const { data } = await axios.get("http://localhost:5050/announcements/all");
+  const { data } = await axios.get(`${BASE_URL}/announcements/all`);
   return data;
 };
 
@@ -20,7 +21,7 @@ export const useAddAnnouncementMutation = () => {
   return useMutation<Announcement, Error, CreateAnnouncementInput>({
     mutationFn: async (newAnnouncement: CreateAnnouncementInput) => {
       const { data } = await axios.post<Announcement>(
-        "http://localhost:5050/announcements/create",
+        `${BASE_URL}/announcements/create`,
         newAnnouncement
       );
       return data;
@@ -36,7 +37,7 @@ export const useDeleteAnnouncementMutation = () => {
 
   return useMutation<void, Error, string>({
     mutationFn: async (id: string) => {
-      await axios.delete(`http://localhost:5050/announcements/delete/${id}`);
+      await axios.delete(`${BASE_URL}/announcements/delete/${id}`);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["announcements"] });

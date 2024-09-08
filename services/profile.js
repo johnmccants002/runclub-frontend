@@ -8,9 +8,7 @@ export const useProfileQuery = (userId) => {
   return useQuery(
     ["profile", userId],
     async () => {
-      const { data } = await axios.get(
-        `http://localhost:3000/users/profile/${userId}`
-      );
+      const { data } = await axios.get(`${BASE_URL}/users/profile/${userId}`);
       return data;
     },
     {
@@ -31,7 +29,7 @@ export const useUpdateProfileMutation = () => {
   return useMutation(
     async ({ userId, profileData }) => {
       const { data } = await axios.put(
-        `http://localhost:3000/users/profile/${userId}`,
+        `${BASE_URL}/users/profile/${userId}`,
         profileData
       );
       return data;

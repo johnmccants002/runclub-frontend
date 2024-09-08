@@ -1,3 +1,4 @@
+import { BASE_URL } from "@/constants";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
 import axios from "axios";
 
@@ -15,14 +16,12 @@ interface User {
 
 // Function to delete a user
 const deleteUser = async (userId: string): Promise<void> => {
-  await axios.delete(`http://localhost:5050/users/${userId}`);
+  await axios.delete(`${BASE_URL}/users/${userId}`);
 };
 
 // Function to fetch the user data
 const fetchUser = async (userId: string): Promise<User> => {
-  const { data } = await axios.get<User>(
-    `http://localhost:5050/users/${userId}`
-  );
+  const { data } = await axios.get<User>(`${BASE_URL}/users/${userId}`);
   return data;
 };
 

@@ -44,6 +44,7 @@ const Layout = (props: Props) => {
           headerTitle: "",
         }}
       />
+      <Stack.Screen name="qr-code-scanner" options={{ headerTitle: "" }} />
     </Stack>
   );
 };

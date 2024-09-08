@@ -7,7 +7,7 @@ import { TouchableOpacity } from "react-native";
 
 type Props = {};
 
-const Layout = (props: Props) => {
+const Layout = () => {
   const router = useRouter();
 
   const isAdmin = useAuthStore((state) => state.isAdmin);
@@ -48,7 +48,7 @@ const Layout = (props: Props) => {
           title: "",
           headerBackTitle: "",
           headerShadowVisible: false,
-          headerStyle: { backgroundColor: Colors.primary.background },
+          headerStyle: { backgroundColor: "white" },
           headerLeft: () => (
             <TouchableOpacity onPress={router.back}>
               <Ionicons

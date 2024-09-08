@@ -1,6 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import useAuthStore from "../stores/auth";
+import { BASE_URL } from "@/constants";
 
 // Define a type for the login parameters
 interface LoginParams {
@@ -55,7 +56,7 @@ export const useLoginMutation = () => {
     mutationFn: async ({ email, password }: LoginParams) => {
       setAuthLoading(true);
       const { data } = await axios.post<LoginResponse>(
-        "http://localhost:5050/auth/signin",
+        `${BASE_URL}/auth/signin`,
         {
           email,
           password,
@@ -85,7 +86,7 @@ export const useRegisterMutation = () => {
 
       // Send the registration data including tosAccepted and emailList
       const { data } = await axios.post<SignUpResponse>(
-        "http://localhost:5050/auth/signup",
+        `${BASE_URL}/auth/signup`,
         userData
       );
 
@@ -110,7 +111,7 @@ export const useLogoutMutation = () => {
   return useMutation<LogoutResponse, Error>({
     mutationFn: async () => {
       const { data } = await axios.post<LogoutResponse>(
-        "http://localhost:5050/auth/logout"
+        `${BASE_URL}/auth/logout`
       );
       return data;
     },

@@ -1,10 +1,10 @@
-import CreateEventScreen from "@/components/screens/CreateEventScree";
+import QRCodeScanner from "@/components/QRCodeScanner";
 import React from "react";
 
 type Props = {};
 
 const Page = (props: Props) => {
-  return <CreateEventScreen />;
+  return <QRCodeScanner />;
 };
 
 export default Page;
