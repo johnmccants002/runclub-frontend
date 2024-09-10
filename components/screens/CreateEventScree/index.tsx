@@ -1,26 +1,30 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  Button,
-  StyleSheet,
-  Alert,
-  Image,
-  ScrollView,
-  TouchableOpacity,
-  Platform,
-  TextInput,
-} from "react-native";
-import * as ImagePicker from "expo-image-picker";
 import { useAddEventMutation } from "@/services/events";
 import { Ionicons } from "@expo/vector-icons";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import * as ImagePicker from "expo-image-picker";
+import axios from "axios"; // Add axios to make API calls
+import React, { useState } from "react";
+import {
+  Alert,
+  Image,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  FlatList,
+  TouchableWithoutFeedback,
+} from "react-native";
 
 const CreateEventScreen: React.FC = () => {
   const [title, setTitle] = useState("");
   const [details, setDetails] = useState("");
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [photo, setPhoto] = useState(null);
+  const [location, setLocation] = useState<string>("");
+  const [predictions, setPredictions] = useState<any[]>([]); // For storing autocomplete results
   const userId = "66cea48dded84be71dcb04de"; // Admin ID or user ID
 
   // States for handling the date and time picker
@@ -38,8 +42,6 @@ const CreateEventScreen: React.FC = () => {
       return;
     }
 
-    console.log(startTime, "THIS IS THE START TIME");
-
     addEventMutation.mutate(
       {
         title,
@@ -48,6 +50,7 @@ const CreateEventScreen: React.FC = () => {
         endTime: endTime.toISOString(),
         photo: imageUri ? imageUri : "",
         adminId: userId,
+        location, // Include location in the event details
       },
       {
         onSuccess: () => {
@@ -57,6 +60,8 @@ const CreateEventScreen: React.FC = () => {
           setStartTime(new Date());
           setEndTime(new Date());
           setImageUri(null);
+          setLocation("");
+          setPredictions([]);
         },
         onError: () => {
           Alert.alert("Error", "Failed to create event.");
@@ -105,6 +110,32 @@ const CreateEventScreen: React.FC = () => {
     setEndTime(currentDate);
   };
 
+  // Handle Autocomplete input change and fetch suggestions from backend
+  const handleLocationInputChange = async (value: string) => {
+    setLocation(value);
+
+    console.log("THIS IS THE VALUE", value);
+
+    // Fetch predictions from backend
+    try {
+      const result = await axios.get(
+        `http://localhost:5050/locations/autocomplete`,
+        {
+          params: { input: value },
+        }
+      );
+      setPredictions(result.data); // Store predictions
+    } catch (error) {
+      console.error("Error fetching autocomplete predictions:", error);
+    }
+  };
+
+  // Handle Location selection
+  const handleSelectLocation = (prediction) => {
+    setLocation(prediction.description); // Set the selected location
+    setPredictions([]); // Clear predictions after selection
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.header}>
@@ -126,6 +157,31 @@ const CreateEventScreen: React.FC = () => {
           onChangeText={setDetails}
           multiline
         />
+
+        {/* Location Input with Autocomplete */}
+        <TextInput
+          style={styles.input}
+          placeholder="Event Location"
+          value={location}
+          onChangeText={handleLocationInputChange} // Call the autocomplete function on input change
+        />
+
+        {/* Show autocomplete suggestions */}
+        {predictions.length > 0 && (
+          <FlatList
+            data={predictions}
+            keyExtractor={(item) => item.place_id}
+            renderItem={({ item }) => (
+              <TouchableWithoutFeedback
+                onPress={() => handleSelectLocation(item)}
+              >
+                <View style={styles.suggestionItem}>
+                  <Text style={styles.suggestionText}>{item.description}</Text>
+                </View>
+              </TouchableWithoutFeedback>
+            )}
+          />
+        )}
 
         {/* DateTime Picker for Start Time */}
         <View style={styles.dateTimePicker}>
@@ -220,6 +276,14 @@ const styles = StyleSheet.create({
   dateTimeText: {
     fontSize: 16,
     color: "#333",
+  },
+  suggestionItem: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: "#ccc",
+  },
+  suggestionText: {
+    fontSize: 16,
   },
   imagePickerButton: {
     flexDirection: "row",
