@@ -1,38 +1,85 @@
 import React from "react";
 import {
-  View,
-  Text,
   Image,
   StyleSheet,
+  Text,
   TouchableOpacity,
-  Alert,
+  View,
+  ActivityIndicator,
 } from "react-native";
+import { showLocation } from "react-native-map-link";
+
+// Utility function to format the date
+const formatDate = (timestamp: string) => {
+  const date = new Date(Number(timestamp));
+  return date.toLocaleString(); // Adjust this as needed for your date format
+};
 
 interface EventCardProps {
   title: string;
   description: string;
-  date: string;
   imageUrl: string;
   onRSVP: () => void; // Function to handle RSVP
+  location: string; // Formatted location address
+  lat: number; // Latitude
+  lng: number; // Longitude
+  startTime: string; // Start time as a timestamp
+  endTime: string; // End time as a timestamp
+  isRsvp: boolean; // Indicate whether the user has RSVP'd
+  rsvpLoading: boolean; // Loading state for RSVP action
 }
 
 const EventCard: React.FC<EventCardProps> = ({
   title,
   description,
-  date,
   imageUrl,
   onRSVP,
+  location,
+  lat,
+  lng,
+  startTime,
+  endTime,
+  isRsvp,
+  rsvpLoading,
 }) => {
   return (
     <View style={styles.card}>
       <Image source={{ uri: imageUrl }} style={styles.image} />
       <Text style={styles.title}>{title}</Text>
-      <Text style={styles.date}>{date}</Text>
+
+      <TouchableOpacity
+        onPress={() =>
+          showLocation({
+            latitude: lat,
+            longitude: lng,
+            title: location,
+          })
+        }
+      >
+        <Text style={styles.location}>Location: {location}</Text>
+      </TouchableOpacity>
+
+      <Text style={styles.date}>Start: {formatDate(startTime)}</Text>
+      <Text style={styles.date}>End: {formatDate(endTime)}</Text>
+
       <Text style={styles.description}>{description}</Text>
 
       {/* RSVP Button */}
-      <TouchableOpacity style={styles.rsvpButton} onPress={onRSVP}>
-        <Text style={styles.rsvpButtonText}>RSVP</Text>
+      <TouchableOpacity
+        style={[
+          styles.rsvpButton,
+          isRsvp ? styles.rsvpButtonActive : styles.rsvpButtonInactive,
+        ]}
+        onPress={onRSVP}
+        disabled={rsvpLoading || isRsvp}
+      >
+        {rsvpLoading ? (
+          <ActivityIndicator color="#fff" />
+        ) : (
+          <Text style={styles.rsvpButtonText}>
+            {isRsvp ? "RSVP'd" : "RSVP"}
+          </Text>
+        )}
       </TouchableOpacity>
     </View>
   );
@@ -59,6 +106,12 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     marginVertical: 5,
   },
+  location: {
+    fontSize: 16,
+    color: "#1a73e8", // Make location text blue to indicate it's tappable
+    marginBottom: 5,
+    textDecorationLine: "underline", // Add underline for a link-like feel
+  },
   date: {
     fontSize: 14,
     color: "#888",
@@ -69,11 +122,16 @@ const styles = StyleSheet.create({
     color: "#444",
   },
   rsvpButton: {
-    backgroundColor: "#3b5998", // Facebook-like blue color
     paddingVertical: 10,
     borderRadius: 8,
     alignItems: "center",
     marginTop: 10,
+  },
+  rsvpButtonActive: {
+    backgroundColor: "#4CAF50", // Green color for RSVP'd
+  },
+  rsvpButtonInactive: {
+    backgroundColor: "#3b5998", // Default Facebook-like blue color for RSVP
   },
   rsvpButtonText: {
     color: "#fff",

@@ -1,7 +1,8 @@
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
-import axios from "axios";
+import axios from "@/middleware/axios";
 import { BASE_URL } from "@/constants";
 import useEventsStore from "@/stores/events";
+import useAuthStore from "@/stores/auth"; // Import the auth store for the token
 
 export interface EventInput {
   id: string;
@@ -31,24 +32,42 @@ export interface CreateEventInput {
   endTime: string;
   photo?: string;
   adminId: string;
+  location: {
+    place_id: string;
+    name: string;
+    formatted_address: string;
+    lat: number;
+    lng: number;
+  };
 }
 
 // Fetch future events from the API
 const fetchFutureEvents = async (): Promise<Event[]> => {
-  const { data } = await axios.get(`${BASE_URL}/events/future`);
-  console.log(JSON.stringify("THIS IS THE DATA", data));
+  const token = useAuthStore.getState().token; // Get the token from the auth store
+
+  const { data } = await axios.get(`${BASE_URL}/events/future`, {
+    headers: {
+      Authorization: `Bearer ${token}`, // Include the token in the header
+    },
+  });
   return data.events; // Assuming the response contains events in an array
 };
 
 // Mutation to add a new event
 export const useAddEventMutation = () => {
   const queryClient = useQueryClient();
+  const token = useAuthStore.getState().token; // Get the token from the auth store
 
   return useMutation<Event, Error, CreateEventInput>({
     mutationFn: async (newEvent: CreateEventInput) => {
       const { data } = await axios.post<Event>(
         `${BASE_URL}/events/create`,
-        newEvent
+        newEvent,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the header
+          },
+        }
       );
       return data;
     },
@@ -61,15 +80,24 @@ export const useAddEventMutation = () => {
 // Mutation to fetch all future events and store them in Zustand
 export const useFutureEventsMutation = () => {
   const { setEvents } = useEventsStore();
+  const token = useAuthStore.getState().token; // Get the token from the auth store
+  console.log("THIS IS THE TOKEN: ", token);
 
   return useMutation<Event[], Error, void>({
-    mutationFn: fetchFutureEvents, // The function that fetches future events
+    mutationFn: async () => {
+      const { data } = await axios.get(`${BASE_URL}/events/future`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the header
+        },
+      });
+      return data.events;
+    }, // The function that fetches future events
     onSuccess: (events: Event[]) => {
-      console.log(events, "THESE ARE THE EVENTS");
+      console.log("SUCCESS");
       setEvents(events); // Update Zustand store with future events
     },
     onError: () => {
-      console.log("ERROR FETCHING FUTURE EVENTS");
+      console.log("ERROR");
       setEvents(null); // Clear events in Zustand store if there's an error
     },
   });
@@ -77,8 +105,20 @@ export const useFutureEventsMutation = () => {
 
 // Query to fetch all future events and store them in Zustand
 export const useFutureEventsQuery = () => {
+  console.log("GRABBING FUTURE EVENTS");
+  const token = useAuthStore.getState().token; // Get the token from the auth store
+
   return useQuery<Event[]>({
     queryKey: ["future-events"], // The unique key for this query
-    queryFn: fetchFutureEvents, // The function that fetches future events
+    queryFn: async () => {
+      const response = await axios.get(`${BASE_URL}/events/future`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the header
+        },
+      });
+
+      console.log(response.status);
+      return response.data.events;
+    }, // The function that fetches future events
   });
 };

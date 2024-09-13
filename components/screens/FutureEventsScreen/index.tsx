@@ -1,21 +1,30 @@
 import React from "react";
-import {
-  Image,
-  StyleSheet,
-  View,
-  Text,
-  ScrollView,
-  ActivityIndicator,
-} from "react-native";
+import { Image, StyleSheet, View, Text, ActivityIndicator } from "react-native";
 import ParallaxScrollView from "../../ParallaxScrollView";
-import { useFutureEventsQuery } from "../../../services/events";
+import {
+  useAllRsvpsQuery,
+  useCreateRsvpMutation,
+} from "../../../services/rsvps";
+import { useFutureEventsQuery } from "@/services/events";
 import { Event as EventType } from "../../../types/types"; // Adjust path if needed
 import EventCard from "../../EventCard"; // Assuming you'll create a new component similar to Announcement
+import useAuthStore from "@/stores/auth";
 
 export default function FutureEventsScreen() {
-  const { data: futureEvents, isLoading, error } = useFutureEventsQuery();
+  const {
+    data: futureEvents,
+    isLoading: eventsLoading,
+    error,
+  } = useFutureEventsQuery();
+  const { data: allRsvps, isLoading: rsvpsLoading } = useAllRsvpsQuery(); // Fetch all RSVPs at once
+  const user = useAuthStore((state) => state.user);
 
-  if (isLoading) {
+  // Mutation to RSVP for an event
+  const { mutate: createRsvp, status } = useCreateRsvpMutation();
+
+  const rsvpLoading = status === "pending";
+
+  if (eventsLoading || rsvpsLoading || rsvpLoading) {
     return (
       <View style={styles.centered}>
         <ActivityIndicator size="large" color="#0000ff" />
@@ -31,6 +40,22 @@ export default function FutureEventsScreen() {
     );
   }
 
+  const handleRsvp = (eventId: string, userId: string) => {
+    // Call the RSVP mutation
+    createRsvp(
+      { userId, eventId },
+      {
+        onSuccess: () => {
+          console.log(`RSVP successful for event ${eventId}`);
+          // Optionally, refetch RSVPs or show a success message
+        },
+        onError: (error) => {
+          console.error(`Failed to RSVP for event ${eventId}:`, error);
+        },
+      }
+    );
+  };
+
   return (
     <>
       <ParallaxScrollView
@@ -45,16 +70,30 @@ export default function FutureEventsScreen() {
         <Text style={styles.sectionTitle}>Upcoming Events</Text>
 
         <View style={{ marginTop: -80, zIndex: 99 }}>
-          {futureEvents?.map((event: EventType) => (
-            <View key={event._id} style={styles.eventContainer}>
-              <EventCard
-                title={event.title}
-                description={event.details}
-                date={new Date(event.startTime).toLocaleString()}
-                imageUrl={event.photo} // Use event.photo or a placeholder image
-              />
-            </View>
-          ))}
+          {futureEvents?.map((event: EventType) => {
+            // Find if the user has RSVP'd to this event
+            const isRsvp = !!allRsvps?.find(
+              (rsvp) => rsvp.eventId === event._id
+            );
+
+            return (
+              <View key={event._id} style={styles.eventContainer}>
+                <EventCard
+                  title={event.title}
+                  description={event.details}
+                  imageUrl={event.photo || "https://via.placeholder.com/200"}
+                  location={event.location.formatted_address}
+                  lat={event.location.lat}
+                  lng={event.location.lng}
+                  startTime={event.startTime}
+                  endTime={event.endTime}
+                  isRsvp={isRsvp} // Pass whether the user has RSVP'd
+                  rsvpLoading={rsvpLoading} // Show loading while fetching RSVPs
+                  onRSVP={() => handleRsvp(event._id, user?.userId)} // Replace "currentUserId" with the actual user ID
+                />
+              </View>
+            );
+          })}
         </View>
       </ParallaxScrollView>
     </>
@@ -69,20 +108,7 @@ const styles = StyleSheet.create({
     left: 0,
     top: 0,
     position: "absolute",
-    zIndex: 1, // Ensures the header image is behind the overlay
-  },
-  overlay: {
-    flex: 1,
-    marginTop: -150, // Adjust this value to control the overlap
-    backgroundColor: "rgba(240, 240, 240, 0.9)", // Semi-transparent background
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    paddingTop: 16,
-    zIndex: 2, // Ensures the overlay is on top of the header image
-    position: "relative",
-  },
-  scrollViewContent: {
-    padding: 16,
+    zIndex: 1,
   },
   sectionTitle: {
     fontSize: 32,

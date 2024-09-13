@@ -23,7 +23,8 @@ const CreateEventScreen: React.FC = () => {
   const [details, setDetails] = useState("");
   const [imageUri, setImageUri] = useState<string | null>(null);
   const [photo, setPhoto] = useState(null);
-  const [location, setLocation] = useState<string>("");
+  const [location, setLocation] = useState<any>(null); // Store the full location object
+  const [locationInput, setLocationInput] = useState<string>(""); // Store the input value separately
   const [predictions, setPredictions] = useState<any[]>([]); // For storing autocomplete results
   const userId = "66cea48dded84be71dcb04de"; // Admin ID or user ID
 
@@ -37,11 +38,12 @@ const CreateEventScreen: React.FC = () => {
 
   // Function to handle event creation
   const handleCreateEvent = () => {
-    if (!title || !details || !startTime || !endTime) {
+    if (!title || !details || !startTime || !endTime || !location) {
       Alert.alert("Error", "All fields except photo are required.");
       return;
     }
 
+    // Add full location object to the mutation data
     addEventMutation.mutate(
       {
         title,
@@ -50,7 +52,7 @@ const CreateEventScreen: React.FC = () => {
         endTime: endTime.toISOString(),
         photo: imageUri ? imageUri : "",
         adminId: userId,
-        location, // Include location in the event details
+        location, // Include the full location object in the event details
       },
       {
         onSuccess: () => {
@@ -60,7 +62,8 @@ const CreateEventScreen: React.FC = () => {
           setStartTime(new Date());
           setEndTime(new Date());
           setImageUri(null);
-          setLocation("");
+          setLocation(null); // Reset location
+          setLocationInput(""); // Reset the input field
           setPredictions([]);
         },
         onError: () => {
@@ -112,11 +115,10 @@ const CreateEventScreen: React.FC = () => {
 
   // Handle Autocomplete input change and fetch suggestions from backend
   const handleLocationInputChange = async (value: string) => {
-    setLocation(value);
+    setLocationInput(value); // Update the input value
 
-    console.log("THIS IS THE VALUE", value);
+    if (!value) return;
 
-    // Fetch predictions from backend
     try {
       const result = await axios.get(
         `http://localhost:5050/locations/autocomplete`,
@@ -130,10 +132,35 @@ const CreateEventScreen: React.FC = () => {
     }
   };
 
-  // Handle Location selection
-  const handleSelectLocation = (prediction) => {
-    setLocation(prediction.description); // Set the selected location
-    setPredictions([]); // Clear predictions after selection
+  const fetchPlaceDetails = async (place_id: string) => {
+    const { data } = await axios.get(`/place-details`, {
+      params: { place_id },
+    });
+    return data;
+  };
+
+  // Handle Location selection and fetch place details
+  const handleSelectLocation = async (prediction: any) => {
+    try {
+      // Fetch detailed place information using the place_id
+      const result = await fetchPlaceDetails(prediction.place_id);
+
+      const placeDetails = result.data.result; // This will include the geometry (location) information
+
+      // Set the full location object
+      setLocation({
+        place_id: prediction.place_id,
+        name: prediction.structured_formatting.main_text,
+        formatted_address: prediction.description,
+        lat: placeDetails.geometry.location.lat, // Use the latitude from place details
+        lng: placeDetails.geometry.location.lng, // Use the longitude from place details
+      });
+
+      setLocationInput(prediction.description); // Set input to selected location
+      setPredictions([]); // Clear predictions after selection
+    } catch (error) {
+      console.error("Error fetching place details:", error);
+    }
   };
 
   return (
@@ -162,7 +189,7 @@ const CreateEventScreen: React.FC = () => {
         <TextInput
           style={styles.input}
           placeholder="Event Location"
-          value={location}
+          value={locationInput} // Bind to locationInput for independent typing
           onChangeText={handleLocationInputChange} // Call the autocomplete function on input change
         />
 

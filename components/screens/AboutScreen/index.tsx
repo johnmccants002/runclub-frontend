@@ -2,7 +2,7 @@ import KPIHeader from "@/components/KPIHeader";
 import { Colors } from "@/constants/Colors";
 import useAuthStore from "@/stores/auth";
 import { Ionicons } from "@expo/vector-icons";
-import axios from "axios";
+import axios from "@/middleware/axios";
 import { BlurView } from "expo-blur";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -117,6 +117,8 @@ export default function AboutSectionScreen() {
 
   const isAdmin = useAuthStore((state) => state.isAdmin);
   const user = useAuthStore((state) => state.user);
+  const token = useAuthStore.getState().token; // Get the token from the auth store
+
   const [currentUser, setCurrentUser] = useState<User | null>(null);
   const [qrCode, setQrCode] = useState(null);
 
@@ -128,7 +130,11 @@ export default function AboutSectionScreen() {
           return;
         }
 
-        const response = await axios.get(`${BASE_URL}/users/${user.userId}`);
+        const response = await axios.get(`${BASE_URL}/users/${user.userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the header
+          },
+        });
 
         console.log(response.data?.qrCode);
         setCurrentUser(response.data);
