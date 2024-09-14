@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { Image, StyleSheet, View, Text, ActivityIndicator } from "react-native";
 import ParallaxScrollView from "../../ParallaxScrollView";
 import {
@@ -53,8 +53,14 @@ export default function FutureEventsScreen() {
   }
 
   // Function to handle RSVP
-  const handleRsvp = (eventId: string, userId: string, isRsvp: boolean) => {
+  const handleRsvp = (
+    eventId: string,
+    userId: string,
+    isRsvp: boolean,
+    setLoading: Dispatch<SetStateAction<boolean>>
+  ) => {
     console.log("HANDLING RSVP");
+    setLoading(true);
     if (isRsvp) {
       // Call the delete RSVP mutation
       deleteRsvp(
@@ -84,6 +90,7 @@ export default function FutureEventsScreen() {
         }
       );
     }
+    setLoading(false);
   };
 
   return (
@@ -100,7 +107,7 @@ export default function FutureEventsScreen() {
         <Text style={styles.sectionTitle}>Upcoming Events</Text>
 
         <View style={{ marginTop: -80, zIndex: 99 }}>
-          {eventsLoading || rsvpsLoading || rsvpLoading ? (
+          {eventsLoading ? (
             <View>
               <SkeletonEventCard />
               <SkeletonEventCard />
@@ -128,7 +135,9 @@ export default function FutureEventsScreen() {
                       endTime={event.endTime}
                       isRsvp={isRsvp} // Pass whether the user has RSVP'd
                       rsvpLoading={rsvpLoading} // Show loading while fetching RSVPs
-                      onRSVP={() => handleRsvp(event._id, user?.userId, isRsvp)}
+                      eventId={event._id}
+                      userId={user?.userId}
+                      onRSVP={handleRsvp}
                     />
                   </View>
                 );

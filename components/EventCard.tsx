@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import {
   Image,
   StyleSheet,
@@ -20,7 +20,12 @@ interface EventCardProps {
   title: string;
   description: string;
   imageUrl: string;
-  onRSVP: () => void; // Function to handle RSVP
+  onRSVP: (
+    eventId: string,
+    userId: string,
+    isRsvp: boolean,
+    setLoading: Dispatch<SetStateAction<boolean>>
+  ) => void; // Function to handle RSVP
   location: string; // Formatted location address
   lat: number; // Latitude
   lng: number; // Longitude
@@ -28,6 +33,8 @@ interface EventCardProps {
   endTime: string; // End time as a timestamp
   isRsvp: boolean; // Indicate whether the user has RSVP'd
   rsvpLoading: boolean; // Loading state for RSVP action
+  eventId: string;
+  userId: string;
 }
 
 const EventCard: React.FC<EventCardProps> = ({
@@ -42,8 +49,11 @@ const EventCard: React.FC<EventCardProps> = ({
   endTime,
   isRsvp,
   rsvpLoading,
+  userId,
+  eventId,
 }) => {
   const [visible, setIsVisible] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   return (
     <View style={styles.card}>
@@ -84,10 +94,10 @@ const EventCard: React.FC<EventCardProps> = ({
           styles.rsvpButton,
           isRsvp ? styles.rsvpButtonActive : styles.rsvpButtonInactive,
         ]}
-        onPress={onRSVP}
+        onPress={() => onRSVP(eventId, userId, isRsvp, setLoading)}
         disabled={rsvpLoading}
       >
-        {rsvpLoading ? (
+        {loading ? (
           <ActivityIndicator color="#fff" />
         ) : (
           <Text style={styles.rsvpButtonText}>
