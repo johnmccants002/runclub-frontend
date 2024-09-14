@@ -1,4 +1,4 @@
-import { Tabs, useRouter } from "expo-router";
+import { Tabs, useRouter, useSegments } from "expo-router";
 import React, { useEffect } from "react";
 
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
@@ -13,6 +13,7 @@ export default function TabLayout() {
 
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
   const token = useAuthStore((state) => state.token);
+  const segments = useSegments();
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -39,6 +40,9 @@ export default function TabLayout() {
             />
           ),
           headerShown: false,
+          tabBarStyle: {
+            display: segments[3] === "create-event" ? "none" : "flex",
+          },
         }}
       />
       <Tabs.Screen

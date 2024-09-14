@@ -15,7 +15,7 @@ const Layout = (props: Props) => {
           headerTransparent: true,
           headerRight: () => (
             <Pressable
-              onPress={() => router.push("/admin/(feed)/create-announcement")}
+              onPress={() => router.push("/admin/(feed)/create-event")}
               style={{ alignSelf: "center" }}
             >
               <Ionicons name="add-circle" size={32} color={"white"} />
@@ -25,7 +25,7 @@ const Layout = (props: Props) => {
         }}
       />
       <Stack.Screen
-        name="create-announcement"
+        name="create-event"
         options={{ headerTransparent: true, headerTitle: "" }}
       />
     </Stack>
