@@ -5,12 +5,18 @@ import {
   ActivityIndicator,
   StyleSheet,
   ScrollView,
+  Image,
 } from "react-native";
-import { useMembersQuery } from "@/services/members"; // Adjust the path according to your project structure
+import { useDenyMemberMutation, useMembersQuery } from "@/services/members"; // Adjust the path according to your project structure
 import MemberCard from "@/components/MemberCard"; // Adjust the path according to your project structure
 
 const MembersScreen: React.FC = () => {
   const { data: members, isLoading, error } = useMembersQuery();
+  const denyMemberMutation = useDenyMemberMutation();
+
+  const handleRemoveMember = (userId: string) => {
+    denyMemberMutation.mutate(userId);
+  };
 
   if (isLoading) {
     return (
@@ -22,8 +28,22 @@ const MembersScreen: React.FC = () => {
 
   if (error) {
     return (
-      <View style={styles.centered}>
-        <Text style={styles.errorText}>Failed to load members</Text>
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <Image
+          source={require("@/assets/images/middle.png")}
+          resizeMode="contain"
+          style={{ width: 300, height: 300 }}
+        />
+        <View
+          style={{ gap: 20, alignItems: "center", justifyContent: "center" }}
+        >
+          <Text style={{ fontSize: 24, fontFamily: "helvetica" }}>
+            No Events Scheduled
+          </Text>
+          <Text style={{ fontSize: 24, fontFamily: "helvetica" }}>
+            Check back in later
+          </Text>
+        </View>
       </View>
     );
   }
@@ -31,7 +51,11 @@ const MembersScreen: React.FC = () => {
   return (
     <ScrollView style={styles.container}>
       {members?.map((member) => (
-        <MemberCard key={member._id} member={member} />
+        <MemberCard
+          key={member._id}
+          member={member}
+          onRemove={handleRemoveMember}
+        />
       ))}
     </ScrollView>
   );

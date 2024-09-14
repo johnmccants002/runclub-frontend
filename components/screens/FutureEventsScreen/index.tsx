@@ -37,8 +37,22 @@ export default function FutureEventsScreen() {
 
   if (error) {
     return (
-      <View style={styles.centered}>
-        <Text style={styles.errorText}>Failed to load future events</Text>
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <Image
+          source={require("@/assets/images/middle.png")}
+          resizeMode="contain"
+          style={{ width: 300, height: 300 }}
+        />
+        <View
+          style={{ gap: 20, alignItems: "center", justifyContent: "center" }}
+        >
+          <Text style={{ fontSize: 24, fontFamily: "helvetica" }}>
+            No Events Scheduled
+          </Text>
+          <Text style={{ fontSize: 24, fontFamily: "helvetica" }}>
+            Check back in later
+          </Text>
+        </View>
       </View>
     );
   }
