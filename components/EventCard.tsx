@@ -85,7 +85,7 @@ const EventCard: React.FC<EventCardProps> = ({
           isRsvp ? styles.rsvpButtonActive : styles.rsvpButtonInactive,
         ]}
         onPress={onRSVP}
-        disabled={rsvpLoading || isRsvp}
+        disabled={rsvpLoading}
       >
         {rsvpLoading ? (
           <ActivityIndicator color="#fff" />

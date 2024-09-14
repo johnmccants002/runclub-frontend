@@ -4,6 +4,7 @@ import ParallaxScrollView from "../../ParallaxScrollView";
 import {
   useAllRsvpsQuery,
   useCreateRsvpMutation,
+  useDeleteRsvpMutation,
 } from "../../../services/rsvps";
 import { useFutureEventsQuery } from "@/services/events";
 import { Event as EventType } from "../../../types/types"; // Adjust path if needed
@@ -22,18 +23,12 @@ export default function FutureEventsScreen() {
   const user = useAuthStore((state) => state.user);
 
   // Mutation to RSVP for an event
-  const { mutate: createRsvp, status } = useCreateRsvpMutation();
+  const { mutate: createRsvp, status: createStatus } = useCreateRsvpMutation();
+  const { mutate: deleteRsvp, status: deleteStatus } = useDeleteRsvpMutation();
+
   const { expoPushToken, notification } = usePushNotifications(user?.userId);
 
-  const rsvpLoading = status === "pending";
-
-  // if (eventsLoading || rsvpsLoading || rsvpLoading) {
-  //   return (
-  //     <View style={styles.centered}>
-  //       <ActivityIndicator size="large" color="#0000ff" />
-  //     </View>
-  //   );
-  // }
+  const rsvpLoading = createStatus === "pending" || deleteStatus === "pending";
 
   if (error) {
     return (
@@ -57,20 +52,38 @@ export default function FutureEventsScreen() {
     );
   }
 
-  const handleRsvp = (eventId: string, userId: string) => {
-    // Call the RSVP mutation
-    createRsvp(
-      { userId, eventId },
-      {
-        onSuccess: () => {
-          console.log(`RSVP successful for event ${eventId}`);
-          // Optionally, refetch RSVPs or show a success message
-        },
-        onError: (error) => {
-          console.error(`Failed to RSVP for event ${eventId}:`, error);
-        },
-      }
-    );
+  // Function to handle RSVP
+  const handleRsvp = (eventId: string, userId: string, isRsvp: boolean) => {
+    console.log("HANDLING RSVP");
+    if (isRsvp) {
+      // Call the delete RSVP mutation
+      deleteRsvp(
+        { userId, eventId },
+        {
+          onSuccess: () => {
+            console.log(`RSVP removed for event ${eventId}`);
+            // Optionally, refetch RSVPs or show a success message
+          },
+          onError: (error) => {
+            console.error(`Failed to remove RSVP for event ${eventId}:`, error);
+          },
+        }
+      );
+    } else {
+      // Call the create RSVP mutation
+      createRsvp(
+        { userId, eventId },
+        {
+          onSuccess: () => {
+            console.log(`RSVP successful for event ${eventId}`);
+            // Optionally, refetch RSVPs or show a success message
+          },
+          onError: (error) => {
+            console.error(`Failed to RSVP for event ${eventId}:`, error);
+          },
+        }
+      );
+    }
   };
 
   return (
@@ -115,7 +128,7 @@ export default function FutureEventsScreen() {
                       endTime={event.endTime}
                       isRsvp={isRsvp} // Pass whether the user has RSVP'd
                       rsvpLoading={rsvpLoading} // Show loading while fetching RSVPs
-                      onRSVP={() => handleRsvp(event._id, user?.userId)} // Replace "currentUserId" with the actual user ID
+                      onRSVP={() => handleRsvp(event._id, user?.userId, isRsvp)}
                     />
                   </View>
                 );
