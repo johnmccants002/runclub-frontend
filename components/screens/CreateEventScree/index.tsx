@@ -45,6 +45,18 @@ const CreateEventScreen: React.FC = () => {
       return;
     }
 
+    if (startTime < new Date()) {
+      Alert.alert("Invalid Start Time", "Start time must be in the future.");
+      return;
+    }
+
+    if (endTime <= startTime) {
+      Alert.alert("Invalid End Time", "End time must be after the start time.");
+      return;
+    }
+
+    console.log(startTime, endTime);
+
     let imageUrl = "";
 
     if (imageUri) {
@@ -73,7 +85,7 @@ const CreateEventScreen: React.FC = () => {
         return;
       }
     }
-
+    console.log("REACHED THIS POINT");
     // Once the image is uploaded (if applicable), call the mutation
     addEventMutation.mutate(
       {
@@ -133,16 +145,24 @@ const CreateEventScreen: React.FC = () => {
   };
 
   // DateTime Picker Handlers
-  const onChangeStart = (event, selectedDate) => {
-    const currentDate = selectedDate || startTime;
+  const onChangeStart = (event: any, selectedDate?: Date) => {
+    const dateSelected = selectedDate || startTime;
     setShowStartPicker(Platform.OS === "ios");
-    setStartTime(currentDate);
+    if (dateSelected < new Date()) {
+      Alert.alert("Invalid Start Time", "Start time must be in the future.");
+    } else {
+      setStartTime(dateSelected);
+    }
   };
 
-  const onChangeEnd = (event, selectedDate) => {
-    const currentDate = selectedDate || endTime;
+  const onChangeEnd = (event: any, selectedDate?: Date) => {
+    const dateSelected = selectedDate || endTime;
     setShowEndPicker(Platform.OS === "ios");
-    setEndTime(currentDate);
+    if (dateSelected <= startTime) {
+      Alert.alert("Invalid End Time", "End time must be after the start time.");
+    } else {
+      setEndTime(dateSelected);
+    }
   };
 
   // Handle Autocomplete input change and fetch suggestions from backend
