@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 import {
   Text,
   View,
@@ -6,6 +6,7 @@ import {
   Button,
   TouchableOpacity,
   Alert,
+  Pressable,
 } from "react-native";
 import { CameraView, Camera, BarcodeScanningResult } from "expo-camera";
 import useEventsStore from "@/stores/events";
@@ -13,8 +14,13 @@ import FutureEventsModal from "./FutureEventsModal"; // This is the modal for ev
 import useAuthStore from "@/stores/auth";
 import axios from "axios";
 import { BASE_URL } from "@/constants";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-export default function QRCodeScanner() {
+interface Props {
+  setToggleModal: Dispatch<SetStateAction<boolean>>;
+}
+
+export default function QRCodeScanner({ setToggleModal }: Props) {
   const [hasPermission, setHasPermission] = useState(true);
   const [scanned, setScanned] = useState(false);
   const [modalVisible, setModalVisible] = useState(false); // For controlling the modal visibility
@@ -117,13 +123,40 @@ export default function QRCodeScanner() {
   return (
     <View style={styles.container}>
       {/* Top 2/3rds for the Camera */}
+      <View style={{ height: 120, width: "100%", backgroundColor: "white" }}>
+        <Pressable
+          style={{
+            position: "relative",
+            left: 20,
+            top: 60,
+            width: 50,
+            height: 50,
+          }}
+          onPress={() => setToggleModal(false)}
+        >
+          <View
+            style={{
+              backgroundColor: "gray",
+              alignSelf: "center",
+              width: 40,
+              height: 40,
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: 20,
+              zIndex: 1,
+            }}
+          >
+            <MaterialCommunityIcons name="close" color={"white"} size={30} />
+          </View>
+        </Pressable>
+      </View>
       <View style={styles.cameraContainer}>
         <CameraView
           onBarcodeScanned={scanned ? undefined : handleBarcodeScanned}
           barcodeScannerSettings={{
             barcodeTypes: ["qr", "pdf417"],
           }}
-          style={StyleSheet.absoluteFillObject}
+          style={[StyleSheet.absoluteFillObject, { zIndex: 2 }]}
         />
         {scanned && (
           <Button

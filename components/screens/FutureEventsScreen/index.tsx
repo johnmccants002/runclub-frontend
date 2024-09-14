@@ -9,6 +9,8 @@ import { useFutureEventsQuery } from "@/services/events";
 import { Event as EventType } from "../../../types/types"; // Adjust path if needed
 import EventCard from "../../EventCard"; // Assuming you'll create a new component similar to Announcement
 import useAuthStore from "@/stores/auth";
+import SkeletonEventCard from "./skeleton";
+import usePushNotifications from "@/hooks/usePushNotifications";
 
 export default function FutureEventsScreen() {
   const {
@@ -21,16 +23,17 @@ export default function FutureEventsScreen() {
 
   // Mutation to RSVP for an event
   const { mutate: createRsvp, status } = useCreateRsvpMutation();
+  const { expoPushToken, notification } = usePushNotifications(user?.userId);
 
   const rsvpLoading = status === "pending";
 
-  if (eventsLoading || rsvpsLoading || rsvpLoading) {
-    return (
-      <View style={styles.centered}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
-  }
+  // if (eventsLoading || rsvpsLoading || rsvpLoading) {
+  //   return (
+  //     <View style={styles.centered}>
+  //       <ActivityIndicator size="large" color="#0000ff" />
+  //     </View>
+  //   );
+  // }
 
   if (error) {
     return (
@@ -70,30 +73,41 @@ export default function FutureEventsScreen() {
         <Text style={styles.sectionTitle}>Upcoming Events</Text>
 
         <View style={{ marginTop: -80, zIndex: 99 }}>
-          {futureEvents?.map((event: EventType) => {
-            // Find if the user has RSVP'd to this event
-            const isRsvp = !!allRsvps?.find(
-              (rsvp) => rsvp.eventId === event._id
-            );
+          {eventsLoading || rsvpsLoading || rsvpLoading ? (
+            <View>
+              <SkeletonEventCard />
+              <SkeletonEventCard />
+            </View>
+          ) : (
+            <>
+              {futureEvents?.map((event: EventType) => {
+                // Find if the user has RSVP'd to this event
+                const isRsvp = !!allRsvps?.find(
+                  (rsvp) => rsvp.eventId === event._id
+                );
 
-            return (
-              <View key={event._id} style={styles.eventContainer}>
-                <EventCard
-                  title={event.title}
-                  description={event.details}
-                  imageUrl={event.photo || "https://via.placeholder.com/200"}
-                  location={event.location.formatted_address}
-                  lat={event.location.lat}
-                  lng={event.location.lng}
-                  startTime={event.startTime}
-                  endTime={event.endTime}
-                  isRsvp={isRsvp} // Pass whether the user has RSVP'd
-                  rsvpLoading={rsvpLoading} // Show loading while fetching RSVPs
-                  onRSVP={() => handleRsvp(event._id, user?.userId)} // Replace "currentUserId" with the actual user ID
-                />
-              </View>
-            );
-          })}
+                return (
+                  <View key={event._id} style={styles.eventContainer}>
+                    <EventCard
+                      title={event.title}
+                      description={event.details}
+                      imageUrl={
+                        event.photo || "https://via.placeholder.com/200"
+                      }
+                      location={event.location.formatted_address}
+                      lat={event.location.lat}
+                      lng={event.location.lng}
+                      startTime={event.startTime}
+                      endTime={event.endTime}
+                      isRsvp={isRsvp} // Pass whether the user has RSVP'd
+                      rsvpLoading={rsvpLoading} // Show loading while fetching RSVPs
+                      onRSVP={() => handleRsvp(event._id, user?.userId)} // Replace "currentUserId" with the actual user ID
+                    />
+                  </View>
+                );
+              })}
+            </>
+          )}
         </View>
       </ParallaxScrollView>
     </>

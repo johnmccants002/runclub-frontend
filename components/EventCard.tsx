@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Image,
   StyleSheet,
@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { showLocation } from "react-native-map-link";
+import ImageView from "react-native-image-viewing";
 
 // Utility function to format the date
 const formatDate = (timestamp: string) => {
@@ -42,9 +43,22 @@ const EventCard: React.FC<EventCardProps> = ({
   isRsvp,
   rsvpLoading,
 }) => {
+  const [visible, setIsVisible] = useState(false);
+
   return (
     <View style={styles.card}>
-      <Image source={{ uri: imageUrl }} style={styles.image} />
+      {visible ? (
+        <ImageView
+          images={[{ uri: imageUrl }]}
+          imageIndex={0}
+          visible={visible}
+          onRequestClose={() => setIsVisible(false)}
+        />
+      ) : (
+        <TouchableOpacity onPress={() => setIsVisible(true)}>
+          <Image source={{ uri: imageUrl }} style={styles.image} />
+        </TouchableOpacity>
+      )}
       <Text style={styles.title}>{title}</Text>
 
       <TouchableOpacity
@@ -56,7 +70,7 @@ const EventCard: React.FC<EventCardProps> = ({
           })
         }
       >
-        <Text style={styles.location}>Location: {location}</Text>
+        <Text style={styles.location}>{location}</Text>
       </TouchableOpacity>
 
       <Text style={styles.date}>Start: {formatDate(startTime)}</Text>

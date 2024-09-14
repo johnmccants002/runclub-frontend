@@ -17,6 +17,7 @@ import {
   FlatList,
   TouchableWithoutFeedback,
 } from "react-native";
+import useAuthStore from "@/stores/auth"; // Import the auth store for the token
 
 const CreateEventScreen: React.FC = () => {
   const [title, setTitle] = useState("");
@@ -27,6 +28,7 @@ const CreateEventScreen: React.FC = () => {
   const [locationInput, setLocationInput] = useState<string>(""); // Store the input value separately
   const [predictions, setPredictions] = useState<any[]>([]); // For storing autocomplete results
   const userId = "66cea48dded84be71dcb04de"; // Admin ID or user ID
+  const token = useAuthStore.getState().token;
 
   // States for handling the date and time picker
   const [startTime, setStartTime] = useState<Date>(new Date());
@@ -37,26 +39,56 @@ const CreateEventScreen: React.FC = () => {
   const addEventMutation = useAddEventMutation();
 
   // Function to handle event creation
-  const handleCreateEvent = () => {
+  const handleCreateEvent = async () => {
     if (!title || !details || !startTime || !endTime || !location) {
       Alert.alert("Error", "All fields except photo are required.");
       return;
     }
 
-    // Add full location object to the mutation data
+    let imageUrl = "";
+
+    if (imageUri) {
+      const formData = new FormData();
+
+      formData.append("image", {
+        uri: imageUri,
+        type: "image/jpeg", // Assuming the image is JPEG
+        name: imageUri.split("/").pop(), // Extract the file name from the URI
+      } as any); // Cast as 'any' to bypass TypeScript's type checking
+
+      try {
+        const response = await axios.post(
+          "http://localhost:5050/events/upload",
+          formData, // FormData object containing the file and other fields
+          {
+            headers: {
+              "Content-Type": "multipart/form-data", // Required for file uploads
+            },
+          }
+        );
+        const data = await response.data;
+        imageUrl = data.event.imageUrl; // Store the image URL returned by the backend
+      } catch (error) {
+        Alert.alert("Error", "Failed to upload image.");
+        return;
+      }
+    }
+
+    // Once the image is uploaded (if applicable), call the mutation
     addEventMutation.mutate(
       {
         title,
         details,
         startTime: startTime.toISOString(),
         endTime: endTime.toISOString(),
-        photo: imageUri ? imageUri : "",
+        photo: imageUrl || "", // Send the uploaded image URL or an empty string if no image
         adminId: userId,
         location, // Include the full location object in the event details
       },
       {
         onSuccess: () => {
           Alert.alert("Success", "Event created successfully!");
+          // Reset form fields
           setTitle("");
           setDetails("");
           setStartTime(new Date());
@@ -124,6 +156,9 @@ const CreateEventScreen: React.FC = () => {
         `http://localhost:5050/locations/autocomplete`,
         {
           params: { input: value },
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the header
+          },
         }
       );
       setPredictions(result.data); // Store predictions
@@ -133,10 +168,17 @@ const CreateEventScreen: React.FC = () => {
   };
 
   const fetchPlaceDetails = async (place_id: string) => {
-    const { data } = await axios.get(`/place-details`, {
-      params: { place_id },
-    });
-    return data;
+    console.log(place_id, "PLACE ID");
+    const response = await axios.get(
+      `http://localhost:5050/locations/place-details`,
+      {
+        params: { place_id },
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the header
+        },
+      }
+    );
+    return response;
   };
 
   // Handle Location selection and fetch place details
@@ -145,19 +187,33 @@ const CreateEventScreen: React.FC = () => {
       // Fetch detailed place information using the place_id
       const result = await fetchPlaceDetails(prediction.place_id);
 
-      const placeDetails = result.data.result; // This will include the geometry (location) information
+      // Log the entire response for debugging purposes
+      console.log("Full Response from Backend:", result.data);
 
-      // Set the full location object
-      setLocation({
-        place_id: prediction.place_id,
-        name: prediction.structured_formatting.main_text,
-        formatted_address: prediction.description,
-        lat: placeDetails.geometry.location.lat, // Use the latitude from place details
-        lng: placeDetails.geometry.location.lng, // Use the longitude from place details
-      });
+      // Ensure the expected structure is present
+      if (
+        result.data &&
+        result.data.geometry &&
+        result.data.geometry.location
+      ) {
+        const placeDetails = result.data;
 
-      setLocationInput(prediction.description); // Set input to selected location
-      setPredictions([]); // Clear predictions after selection
+        console.log("WE GOT THE PLACE DETAILS");
+
+        // Set the full location object
+        setLocation({
+          place_id: prediction.place_id,
+          name: prediction.structured_formatting.main_text,
+          formatted_address: prediction.description,
+          lat: placeDetails.geometry.location.lat, // Use the latitude from place details
+          lng: placeDetails.geometry.location.lng, // Use the longitude from place details
+        });
+
+        setLocationInput(prediction.description); // Set input to selected location
+        setPredictions([]); // Clear predictions after selection
+      } else {
+        console.error("Geometry data is missing from the response.");
+      }
     } catch (error) {
       console.error("Error fetching place details:", error);
     }

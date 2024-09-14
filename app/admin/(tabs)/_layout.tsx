@@ -5,6 +5,7 @@ import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import useAuthStore from "@/stores/auth";
+import ScannerButton from "@/components/ScannerButton";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -52,6 +53,10 @@ export default function TabLayout() {
             />
           ),
         }}
+      />
+      <Tabs.Screen
+        name="Modal"
+        options={{ tabBarButton: () => <ScannerButton /> }}
       />
     </Tabs>
   );

@@ -243,7 +243,11 @@ const SignUpScreen: React.FC = () => {
         </View>
 
         {authLoading && (
-          <ActivityIndicator size="large" color={colors.primary["700"]} />
+          <ActivityIndicator
+            size="large"
+            color="#0000ff"
+            style={styles.centeredView}
+          />
         )}
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
@@ -257,6 +261,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 20,
     backgroundColor: "white",
+  },
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   inputContainer: {
     borderColor: colors.neutral["200"],
@@ -286,6 +295,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginTop: 20,
+  },
+  centeredView: {
+    position: "absolute",
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    justifyContent: "center",
+    alignItems: "center",
   },
   buttonText: {
     color: colors.whiteBlack["50"],
