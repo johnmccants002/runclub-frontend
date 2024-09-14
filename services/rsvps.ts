@@ -50,22 +50,25 @@ export const useCreateRsvpMutation = () => {
     },
   });
 };
-
 export const useDeleteRsvpMutation = () => {
   const queryClient = useQueryClient();
   const token = useAuthStore.getState().token; // Get the token from the auth store
 
   return useMutation<any, Error, { userId: string; eventId: string }>({
     mutationFn: async ({ userId, eventId }) => {
-      console.log(`${BASE_URL}/rsvps`);
-      const { data } = await axios.delete(
-        `${BASE_URL}/rsvps/${eventId}/${userId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Include the token in the header
-          },
-        }
-      );
+      const response = await fetch(`${BASE_URL}/rsvps/${eventId}/${userId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the header
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete RSVP");
+      }
+
+      const data = await response.json();
       return data;
     },
     onSuccess: (_, { eventId }) => {
@@ -73,7 +76,6 @@ export const useDeleteRsvpMutation = () => {
       queryClient.invalidateQueries({ queryKey: ["rsvps", eventId] });
     },
     onError: (error) => {
-      // Optional: handle error if needed
       console.error("Error deleting RSVP:", error);
     },
   });
