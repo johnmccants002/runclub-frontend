@@ -1,8 +1,11 @@
 import { StyleSheet, Text } from "react-native";
 
-import FutureEventsScreen from "@/components/screens/FutureEventsScreen";
+import AdminFutureEvents from "@/components/screens/AdminFutureEvents";
+import { useSegments } from "expo-router";
 export default function HomeScreen() {
-  return <FutureEventsScreen />;
+  const segments = useSegments();
+  console.log("THESE ARE THE SEGMENTS", segments);
+  return <AdminFutureEvents />;
 }
 
 const styles = StyleSheet.create({

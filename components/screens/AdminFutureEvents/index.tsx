@@ -8,9 +8,9 @@ import {
 } from "../../../services/rsvps";
 import { useFutureEventsQuery } from "@/services/events";
 import { Event as EventType } from "../../../types/types"; // Adjust path if needed
-import EventCard from "../../EventCard"; // Assuming you'll create a new component similar to Announcement
+import AdminEventCard from "./AdminEventCard"; // Assuming you'll create a new component similar to Announcement
 import useAuthStore from "@/stores/auth";
-import SkeletonEventCard from "./skeleton";
+import SkeletonEventCard from "../FutureEventsScreen/skeleton";
 import usePushNotifications from "@/hooks/usePushNotifications";
 import { useUserQuery } from "@/services/user";
 
@@ -27,7 +27,7 @@ export default function FutureEventsScreen() {
     data: user,
     error: err,
     isLoading,
-  } = useUserQuery(currentUser?.userId);
+  } = useUserQuery(currentUser.userId);
 
   useEffect(() => {
     if (user) {
@@ -59,40 +59,6 @@ export default function FutureEventsScreen() {
           </Text>
           <Text style={{ fontSize: 24, fontFamily: "helvetica" }}>
             Check back in later
-          </Text>
-        </View>
-      </View>
-    );
-  }
-
-  if (user?.membershipStatus == "pending") {
-    return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <Image
-          source={require("@/assets/images/middle.png")}
-          resizeMode="contain"
-          style={{ width: 300, height: 300 }}
-        />
-        <View
-          style={{ gap: 20, alignItems: "center", justifyContent: "center" }}
-        >
-          <Text
-            style={{
-              fontSize: 20,
-              fontFamily: "helvetica",
-              textAlign: "center",
-            }}
-          >
-            Still waiting for Cory to accept you into the app.
-          </Text>
-          <Text
-            style={{
-              fontSize: 20,
-              fontFamily: "helvetica",
-              textAlign: "center",
-            }}
-          >
-            We'll send you a notification when you get accepted.
           </Text>
         </View>
       </View>
@@ -169,7 +135,7 @@ export default function FutureEventsScreen() {
 
                 return (
                   <View key={event._id} style={styles.eventContainer}>
-                    <EventCard
+                    <AdminEventCard
                       title={event.title}
                       description={event.details}
                       imageUrl={
