@@ -1,6 +1,7 @@
 import { BASE_URL } from "@/constants";
 import { useQuery, useQueryClient, useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import axios from "@/middleware/axios";
+import useAuthStore from "@/stores/auth";
 
 // Define a type for the user's information
 interface User {
@@ -21,7 +22,13 @@ const deleteUser = async (userId: string): Promise<void> => {
 
 // Function to fetch the user data
 const fetchUser = async (userId: string): Promise<User> => {
-  const { data } = await axios.get<User>(`${BASE_URL}/users/${userId}`);
+  console.log(userId, "USER ID FUNCTION BEING CALLED");
+  const token = useAuthStore.getState().token; // Get the token from the auth store
+
+  const { data } = await axios.get<User>(`${BASE_URL}/users/${userId}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  console.log("THIS IS THE USER DATA FROM THE FETCH FUNCTION", data);
   return data;
 };
 

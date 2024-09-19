@@ -116,6 +116,7 @@ export default function AboutSectionScreen() {
   const router = useRouter();
 
   const isAdmin = useAuthStore((state) => state.isAdmin);
+  const [loading, setLoading] = useState(false);
   const user = useAuthStore((state) => state.user);
   const token = useAuthStore.getState().token; // Get the token from the auth store
 
@@ -124,6 +125,7 @@ export default function AboutSectionScreen() {
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
+      setLoading(true);
       try {
         if (!user?.userId) {
           console.warn("No valid userId found");
@@ -144,6 +146,8 @@ export default function AboutSectionScreen() {
         }
       } catch (error) {
         console.error("Error fetching current user:", error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -174,13 +178,15 @@ export default function AboutSectionScreen() {
         <KPIHeader />
       ) : (
         <View style={styles.header}>
-          {currentUser ? (
+          {currentUser?.membershipStatus === "accepted" && loading !== true ? (
             <QRCode
               value={currentUser._id} // This could be the userId or a URL containing the userId
               size={200} // Adjust the size of the QR code as needed
             />
           ) : (
-            <Text style={styles.text}>Loading your QR Code...</Text>
+            <Text style={styles.text}>
+              Your QR Code will be right here when you get accepted.
+            </Text>
           )}
           <View style={styles.info}>
             <View style={styles.infoDescription}>

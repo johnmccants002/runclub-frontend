@@ -16,9 +16,14 @@ import {
   useDenyMemberMutation,
 } from "@/services/members"; // Adjust path accordingly
 import { BASE_URL } from "@/constants";
+import useAuthStore from "@/stores/auth"; // Import the auth store to get the token
 
 const fetchPendingMembers = async (): Promise<User[]> => {
-  const { data } = await axios.get(`${BASE_URL}/admin/pending-members`); // Adjust URL accordingly
+  const token = useAuthStore.getState().token; // Get the token from the auth store
+
+  const { data } = await axios.get(`${BASE_URL}/admin/pending-members`, {
+    headers: { Authorization: `Bearer ${token}` },
+  }); // Adjust URL accordingly
   return data;
 };
 
@@ -136,6 +141,7 @@ const styles = StyleSheet.create({
   },
   listContainer: {
     padding: 20,
+    backgroundColor: "white",
   },
   card: {
     backgroundColor: "#fff",

@@ -70,7 +70,11 @@ export default function ParallaxScrollView({
           {headerImage}
         </Animated.View>
       </View>
-      <Animated.ScrollView ref={scrollRef} scrollEventThrottle={16}>
+      <Animated.ScrollView
+        ref={scrollRef}
+        scrollEventThrottle={16}
+        contentContainerStyle={{}}
+      >
         <Animated.View style={[styles.content, contentAnimatedStyle]}>
           {children}
         </Animated.View>

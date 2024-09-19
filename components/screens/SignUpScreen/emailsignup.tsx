@@ -18,6 +18,7 @@ import useAuthStore from "../../../stores/auth";
 import Checkbox from "expo-checkbox";
 import { useRouter } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
+import { sendNewUserNotification } from "@/services/notifications";
 
 const { width, height } = Dimensions.get("window");
 
@@ -63,7 +64,7 @@ const SignUpScreen: React.FC = () => {
     registerMutation.mutate(
       { email, password, firstName, lastName, emailList, tosAccepted },
       {
-        onSuccess: () => {
+        onSuccess: async () => {
           Alert.alert("Success", "You have registered successfully.");
         },
         onError: () => {

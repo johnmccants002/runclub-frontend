@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React, { Dispatch, SetStateAction, useEffect } from "react";
 import { Image, StyleSheet, View, Text, ActivityIndicator } from "react-native";
 import ParallaxScrollView from "../../ParallaxScrollView";
 import {
@@ -12,6 +12,7 @@ import EventCard from "../../EventCard"; // Assuming you'll create a new compone
 import useAuthStore from "@/stores/auth";
 import SkeletonEventCard from "./skeleton";
 import usePushNotifications from "@/hooks/usePushNotifications";
+import { useUserQuery } from "@/services/user";
 
 export default function FutureEventsScreen() {
   const {
@@ -20,7 +21,19 @@ export default function FutureEventsScreen() {
     error,
   } = useFutureEventsQuery();
   const { data: allRsvps, isLoading: rsvpsLoading } = useAllRsvpsQuery(); // Fetch all RSVPs at once
-  const user = useAuthStore((state) => state.user);
+  const currentUser = useAuthStore((state) => state.user);
+
+  const {
+    data: user,
+    error: err,
+    isLoading,
+  } = useUserQuery(currentUser.userId);
+
+  useEffect(() => {
+    if (user) {
+      console.log("USER HERE", user);
+    }
+  }, [user]);
 
   // Mutation to RSVP for an event
   const { mutate: createRsvp, status: createStatus } = useCreateRsvpMutation();
@@ -46,6 +59,40 @@ export default function FutureEventsScreen() {
           </Text>
           <Text style={{ fontSize: 24, fontFamily: "helvetica" }}>
             Check back in later
+          </Text>
+        </View>
+      </View>
+    );
+  }
+
+  if (user?.membershipStatus == "pending") {
+    return (
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+        <Image
+          source={require("@/assets/images/middle.png")}
+          resizeMode="contain"
+          style={{ width: 300, height: 300 }}
+        />
+        <View
+          style={{ gap: 20, alignItems: "center", justifyContent: "center" }}
+        >
+          <Text
+            style={{
+              fontSize: 20,
+              fontFamily: "helvetica",
+              textAlign: "center",
+            }}
+          >
+            Still waiting for Cory to accept you into the app.
+          </Text>
+          <Text
+            style={{
+              fontSize: 20,
+              fontFamily: "helvetica",
+              textAlign: "center",
+            }}
+          >
+            We'll send you a notification when you get accepted.
           </Text>
         </View>
       </View>
