@@ -30,6 +30,7 @@ export const useCreateRsvpMutation = () => {
 
   return useMutation<any, Error, { userId: string; eventId: string }>({
     mutationFn: async ({ userId, eventId }) => {
+      console.log("userId: ", userId, "eventId: ", eventId);
       const { data } = await axios.post(
         `${BASE_URL}/rsvps`,
         {
@@ -95,6 +96,8 @@ const fetchAllRsvps = async (): Promise<
       Authorization: `Bearer ${token}`, // Include the token in the header
     },
   });
+
+  console.log("THESE ARE THE RSVPS: ", data.rsvps);
 
   return data.rsvps; // Assuming the response contains an array of RSVPs
 };

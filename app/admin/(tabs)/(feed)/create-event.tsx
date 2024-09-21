@@ -1,12 +1,10 @@
-import CreateEventScreen from "@/components/screens/CreateEventScree";
+import CreateEventScreen from "@/components/screens/CreateEventScreen";
 import { useSegments } from "expo-router";
 import React from "react";
 
 type Props = {};
 
 const Page = (props: Props) => {
-  const segments = useSegments();
-  console.log(segments, "CURRENT SEGMENTS");
   return <CreateEventScreen />;
 };
 

@@ -140,7 +140,7 @@ const EventCard: React.FC<EventCardProps> = ({
               fontWeight: "semibold",
             }}
           >
-            {rsvps.length} RSVPs
+            {rsvps.length > 0 ? `${rsvps.length} RSVPs` : <></>}
           </Text>
         </Pressable>
       </View>

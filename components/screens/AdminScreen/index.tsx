@@ -26,12 +26,6 @@ const DATA = [
     icon: "information-circle-outline",
     route: "/about/aboutus",
   },
-  {
-    id: "3",
-    title: "Notifications",
-    icon: "notifications-outline",
-    route: "/about/contact",
-  },
 
   {
     id: "6",

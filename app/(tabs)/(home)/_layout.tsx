@@ -16,10 +16,6 @@ const Layout = (props: Props) => {
           headerTitle: "",
         }}
       />
-      <Stack.Screen
-        name="create-announcement"
-        options={{ headerTransparent: true, headerTitle: "" }}
-      />
     </Stack>
   );
 };

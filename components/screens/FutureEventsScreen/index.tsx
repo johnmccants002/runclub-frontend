@@ -39,7 +39,7 @@ export default function FutureEventsScreen() {
   const { mutate: createRsvp, status: createStatus } = useCreateRsvpMutation();
   const { mutate: deleteRsvp, status: deleteStatus } = useDeleteRsvpMutation();
 
-  const { expoPushToken, notification } = usePushNotifications(user?.userId);
+  const { expoPushToken, notification } = usePushNotifications(user?._id);
 
   const rsvpLoading = createStatus === "pending" || deleteStatus === "pending";
 
@@ -164,7 +164,8 @@ export default function FutureEventsScreen() {
               {futureEvents?.map((event: EventType) => {
                 // Find if the user has RSVP'd to this event
                 const isRsvp = !!allRsvps?.find(
-                  (rsvp) => rsvp.eventId === event._id
+                  (rsvp) =>
+                    rsvp.eventId === event._id && user._id === rsvp.userId
                 );
 
                 return (
@@ -183,7 +184,7 @@ export default function FutureEventsScreen() {
                       isRsvp={isRsvp} // Pass whether the user has RSVP'd
                       rsvpLoading={rsvpLoading} // Show loading while fetching RSVPs
                       eventId={event._id}
-                      userId={user?.userId}
+                      userId={user?._id}
                       onRSVP={handleRsvp}
                     />
                   </View>

@@ -17,7 +17,9 @@ const Screen: React.FC<Props> = () => {
   useEffect(() => {
     const checkAuth = async () => {
       await initializeAuth();
-      setLoading(false);
+      setTimeout(() => {
+        setLoading(false);
+      }, 2000);
     };
 
     console.log(JSON.stringify(user), "THIS IS THE USER");
@@ -26,16 +28,7 @@ const Screen: React.FC<Props> = () => {
   }, [initializeAuth, user]);
 
   if (loading) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          backgroundColor: palette.darkCharcoal,
-        }}
-      ></View>
-    );
+    return <StaticSplashScreen />;
   }
 
   return (
