@@ -29,12 +29,6 @@ export default function FutureEventsScreen() {
     isLoading,
   } = useUserQuery(currentUser.userId);
 
-  useEffect(() => {
-    if (user) {
-      console.log("USER HERE", user);
-    }
-  }, [user]);
-
   // Mutation to RSVP for an event
   const { mutate: createRsvp, status: createStatus } = useCreateRsvpMutation();
   const { mutate: deleteRsvp, status: deleteStatus } = useDeleteRsvpMutation();

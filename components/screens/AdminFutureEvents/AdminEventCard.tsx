@@ -1,19 +1,18 @@
+import { BASE_URL } from "@/constants";
+import axiosInstance from "@/middleware/axios";
+import useAuthStore from "@/stores/auth";
+import { useRouter } from "expo-router";
 import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import {
   Image,
+  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  ActivityIndicator,
-  Pressable,
 } from "react-native";
-import { showLocation } from "react-native-map-link";
 import ImageView from "react-native-image-viewing";
-import axiosInstance from "@/middleware/axios";
-import { BASE_URL } from "@/constants";
-import useAuthStore from "@/stores/auth";
-import { useRouter } from "expo-router";
+import { showLocation } from "react-native-map-link";
 
 // Utility function to format the date
 const formatDate = (timestamp: string) => {
@@ -125,18 +124,24 @@ const EventCard: React.FC<EventCardProps> = ({
       <View
         style={{
           flex: 1,
-          justifyContent: "space-evenly",
+          justifyContent: "flex-end",
           flexDirection: "row",
+          paddingHorizontal: 20,
         }}
       >
-        <Pressable style={{ justifyContent: "center", alignItems: "center" }}>
-          <Text style={{ fontSize: 20 }}>Checkins: </Text>
-        </Pressable>
         <Pressable
           style={{ justifyContent: "center", alignItems: "center" }}
           onPress={() => router.push(`/admin/rsvps/${eventId}`)}
         >
-          <Text style={{ fontSize: 20 }}> RSVPs: {rsvps.length} </Text>
+          <Text
+            style={{
+              fontSize: 14,
+              color: "blue",
+              fontWeight: "semibold",
+            }}
+          >
+            {rsvps.length} RSVPs
+          </Text>
         </Pressable>
       </View>
     </View>

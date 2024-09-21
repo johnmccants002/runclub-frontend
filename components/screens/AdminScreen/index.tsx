@@ -78,12 +78,6 @@ const ADMIN_DATA = [
     icon: "settings",
     route: "/admin/about/settings",
   },
-  {
-    id: "7",
-    title: "Scanner",
-    icon: "camera",
-    route: "/admin/about/qr-code-scanner",
-  },
 ];
 
 export default function AdminScreen() {

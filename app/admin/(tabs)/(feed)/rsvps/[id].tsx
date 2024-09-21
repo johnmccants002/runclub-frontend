@@ -84,7 +84,7 @@ const EventRsvps = (props: Props) => {
       <Stack.Screen options={{ title: `${rsvps.length} RSVPs` }} />
       <FlatList
         data={users}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
           <TouchableOpacity style={styles.userContainer}>
             <Image

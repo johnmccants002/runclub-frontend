@@ -30,7 +30,7 @@ export default function TabLayout() {
       }}
     >
       <Tabs.Screen
-        name="(feed)/events/index"
+        name="(feed)"
         options={{
           title: "Feed",
           tabBarIcon: ({ color, focused }) => (

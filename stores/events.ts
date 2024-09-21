@@ -1,4 +1,4 @@
-import create from "zustand";
+import { create } from "zustand";
 import { Event } from "../types/types"; // Assuming the Event interface is defined here
 
 interface EventsStore {
