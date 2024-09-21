@@ -28,7 +28,14 @@ const MembersScreen: React.FC = () => {
 
   if (error) {
     return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "white",
+        }}
+      >
         <Image
           source={require("@/assets/images/middle.png")}
           resizeMode="contain"
@@ -66,9 +73,11 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "white",
   },
   container: {
     paddingTop: 16,
+    backgroundColor: "white",
   },
   sectionTitle: {
     fontSize: 24,

@@ -37,23 +37,12 @@ const DATA = [
 
 const ADMIN_DATA = [
   {
-    id: "1",
-    title: "Contact Us",
-    icon: "call-outline",
-    route: "/admin/about/contact",
-  },
-  {
     id: "2",
     title: "About Us",
     icon: "information-circle-outline",
     route: "/admin/about/aboutus",
   },
-  {
-    id: "3",
-    title: "Notifications",
-    icon: "notifications-outline",
-    route: "/admin/about/contact",
-  },
+
   {
     id: "4",
     title: "Run Club Members",

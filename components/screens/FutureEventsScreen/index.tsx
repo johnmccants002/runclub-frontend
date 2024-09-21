@@ -45,7 +45,14 @@ export default function FutureEventsScreen() {
 
   if (error) {
     return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "white",
+        }}
+      >
         <Image
           source={require("@/assets/images/middle.png")}
           resizeMode="contain"
@@ -165,7 +172,7 @@ export default function FutureEventsScreen() {
                 // Find if the user has RSVP'd to this event
                 const isRsvp = !!allRsvps?.find(
                   (rsvp) =>
-                    rsvp.eventId === event._id && user._id === rsvp.userId
+                    rsvp.eventId === event._id && user?._id === rsvp.userId
                 );
 
                 return (

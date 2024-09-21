@@ -28,6 +28,9 @@ export default function QRCodeScanner({ setToggleModal }: Props) {
   const { events, selectedEvent, setSelectedEvent } = useEventsStore();
   const user = useAuthStore((state) => state.user);
   const [scannedIds, setScannedIds] = useState<String[]>([]);
+  const [alreadyAlert, setAlreadyAlert] = useState<boolean>(false);
+  const [failedAlert, setFailedAlert] = useState<boolean>(false);
+  const token = useAuthStore.getState().token; // Get the token from the auth store
 
   useEffect(() => {
     console.log(user, "This is the user");
@@ -52,11 +55,12 @@ export default function QRCodeScanner({ setToggleModal }: Props) {
   const handleBarcodeScanned = async ({ data }: BarcodeScanningResult) => {
     console.log("SCANNING");
 
-    if (scannedIds.includes(data)) {
+    if (scannedIds.includes(data) && !alreadyAlert) {
       Alert.alert(
         "Already Checked In",
         "This user has already been checked in."
       );
+      setAlreadyAlert(true);
 
       return;
     }
@@ -66,6 +70,7 @@ export default function QRCodeScanner({ setToggleModal }: Props) {
       console.log(data, selectedEvent, user, "THIS IS THE DATA TO SEND");
       // Prepare the check-in data
       if (data && selectedEvent && user) {
+        console.log(data, "THIS IS THE DATA");
         const checkInData = {
           userId: data, // Assuming `data` from QR code is the userId
           eventId: selectedEvent._id, // The currently selected event's ID
@@ -75,7 +80,8 @@ export default function QRCodeScanner({ setToggleModal }: Props) {
         // Make the POST request to check in the user
         const response = await axios.post(
           `${BASE_URL}/admin/checkin`,
-          checkInData
+          checkInData,
+          { headers: { Authorization: `Bearer ${token}` } }
         );
 
         // Handle successful check-in
@@ -83,16 +89,18 @@ export default function QRCodeScanner({ setToggleModal }: Props) {
         console.log("Check-in data:", response.data);
       }
     } catch (error: any) {
-      if (error.response && error.response.status === 409) {
+      if (error.response && error.response.status === 409 && !failedAlert) {
         // Handle the "User already checked in" error
         Alert.alert(
           "Already Checked In",
           "This user has already been checked into this event."
         );
-      } else {
+        setFailedAlert(true);
+      } else if (!failedAlert) {
         // Handle other errors
         Alert.alert("Error", "Failed to check in the user.");
         console.error("Check-in error:", error);
+        setFailedAlert(true);
       }
     }
 

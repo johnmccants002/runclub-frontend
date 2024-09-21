@@ -80,7 +80,7 @@ const PendingMembersScreen: React.FC = () => {
 
   if (pendingMembers && pendingMembers?.length < 1) {
     return (
-      <View style={{ flex: 1, alignItems: "center" }}>
+      <View style={{ flex: 1, alignItems: "center", backgroundColor: "white" }}>
         <Image
           source={require("@/assets/images/middle.png")}
           resizeMode="contain"
@@ -138,6 +138,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "white",
   },
   listContainer: {
     padding: 20,

@@ -33,13 +33,20 @@ export default function FutureEventsScreen() {
   const { mutate: createRsvp, status: createStatus } = useCreateRsvpMutation();
   const { mutate: deleteRsvp, status: deleteStatus } = useDeleteRsvpMutation();
 
-  const { expoPushToken, notification } = usePushNotifications(user?.userId);
+  const { expoPushToken, notification } = usePushNotifications(user?._id);
 
   const rsvpLoading = createStatus === "pending" || deleteStatus === "pending";
 
   if (error) {
     return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "white",
+        }}
+      >
         <Image
           source={require("@/assets/images/middle.png")}
           resizeMode="contain"
@@ -49,10 +56,7 @@ export default function FutureEventsScreen() {
           style={{ gap: 20, alignItems: "center", justifyContent: "center" }}
         >
           <Text style={{ fontSize: 24, fontFamily: "helvetica" }}>
-            No Events Scheduled
-          </Text>
-          <Text style={{ fontSize: 24, fontFamily: "helvetica" }}>
-            Check back in later
+            No Events. Go create one
           </Text>
         </View>
       </View>

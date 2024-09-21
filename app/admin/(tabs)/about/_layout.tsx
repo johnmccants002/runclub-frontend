@@ -28,6 +28,8 @@ const Layout = (props: Props) => {
         options={{
           headerBackTitleVisible: false,
           headerTitle: "Members",
+          headerStyle: { backgroundColor: "white" },
+          headerTitleStyle: { color: "black" },
         }}
       />
       <Stack.Screen
@@ -35,6 +37,8 @@ const Layout = (props: Props) => {
         options={{
           headerBackTitleVisible: false,
           headerTitle: "Pending",
+          headerStyle: { backgroundColor: "white" },
+          headerTitleStyle: { color: "black" },
         }}
       />
       <Stack.Screen
@@ -42,6 +46,8 @@ const Layout = (props: Props) => {
         options={{
           headerBackTitleVisible: false,
           headerTitle: "",
+          headerStyle: { backgroundColor: "white" },
+          headerTitleStyle: { color: "black" },
         }}
       />
       <Stack.Screen name="qr-code-scanner" options={{ headerTitle: "" }} />

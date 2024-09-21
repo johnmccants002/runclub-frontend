@@ -24,7 +24,7 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+        tabBarActiveTintColor: "black",
         headerShown: false,
         tabBarStyle: { backgroundColor: "white" },
       }}
@@ -42,6 +42,7 @@ export default function TabLayout() {
           headerShown: false,
           tabBarStyle: {
             display: segments[3] === "create-event" ? "none" : "flex",
+            backgroundColor: "white",
           },
         }}
       />
