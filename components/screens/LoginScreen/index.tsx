@@ -19,8 +19,7 @@ type Props = {};
 const LoginScreen = (props: Props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const keyboardVerticalOffset = Platform.OS === "ios" ? 0 : 0;
-  const router = useRouter();
+  const keyboardVerticalOffset = Platform.OS === "ios" ? 20 : 0;
   const loginMutation = useLoginMutation();
 
   async function signInWithEmail() {
@@ -99,13 +98,6 @@ const LoginScreen = (props: Props) => {
             <View
               style={{ flexDirection: "row", alignItems: "center", gap: 16 }}
             ></View>
-
-            <TouchableOpacity
-              style={[defaultStyles.pillButton, { marginBottom: 20 }]}
-              onPress={() => router.push("/(auth)/signup")}
-            >
-              <Text style={defaultStyles.buttonText}>Sign Up</Text>
-            </TouchableOpacity>
           </View>
         </View>
       </View>
