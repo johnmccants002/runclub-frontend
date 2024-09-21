@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Stack, useRouter } from "expo-router";
+import { Stack, useRouter, Link } from "expo-router";
 import React from "react";
 
 import { Pressable, Text } from "react-native";
@@ -14,19 +14,16 @@ const Layout = (props: Props) => {
         options={{
           headerTransparent: true,
           headerRight: () => (
-            <Pressable
-              onPress={() => router.push("/admin/(feed)/create-event")}
+            <Link
+              href={"/admin/create-event"}
               style={{ alignSelf: "center" }}
+              asChild
             >
               <Ionicons name="add-circle" size={32} color={"white"} />
-            </Pressable>
+            </Link>
           ),
           headerTitle: "",
         }}
-      />
-      <Stack.Screen
-        name="create-event"
-        options={{ headerTransparent: true, headerTitle: "" }}
       />
     </Stack>
   );

@@ -41,7 +41,6 @@ export default function TabLayout() {
           ),
           headerShown: false,
           tabBarStyle: {
-            display: segments[3] === "create-event" ? "none" : "flex",
             backgroundColor: "white",
           },
         }}
