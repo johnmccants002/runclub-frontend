@@ -104,6 +104,7 @@ const PendingMembersScreen: React.FC = () => {
     <>
       <FlatList
         data={pendingMembers}
+        style={{ backgroundColor: "white" }}
         keyExtractor={(item) => item._id}
         renderItem={({ item }) => (
           <View style={styles.card}>

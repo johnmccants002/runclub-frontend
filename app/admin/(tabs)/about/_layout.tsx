@@ -1,3 +1,4 @@
+import { palette } from "@/constants/Colors";
 import { Stack } from "expo-router";
 import React from "react";
 
@@ -46,7 +47,7 @@ const Layout = (props: Props) => {
         options={{
           headerBackTitleVisible: false,
           headerTitle: "",
-          headerStyle: { backgroundColor: "white" },
+          headerStyle: { backgroundColor: palette.offWhite },
           headerTitleStyle: { color: "black" },
         }}
       />

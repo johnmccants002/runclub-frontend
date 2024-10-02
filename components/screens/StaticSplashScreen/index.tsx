@@ -5,7 +5,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { palette } from "../../../constants/Colors";
 
 const StaticSplashScreen = () => {
-  const appName = "916 Run Club";
+  const appName = "916 RUN CLUB";
 
   return (
     <View style={styles.container}>

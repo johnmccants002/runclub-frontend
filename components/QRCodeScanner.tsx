@@ -178,11 +178,12 @@ export default function QRCodeScanner({ setToggleModal }: Props) {
       <View style={styles.eventContainer}>
         {selectedEvent ? (
           <>
-            <TouchableOpacity onPress={handleEventChange}>
+            <TouchableOpacity
+              onPress={handleEventChange}
+              style={{ alignItems: "center", justifyContent: "center", gap: 4 }}
+            >
               <Text style={styles.eventTitle}>{selectedEvent.title}</Text>
-              <Text style={styles.eventDate}>
-                {new Date(selectedEvent.startTime).toLocaleString()}
-              </Text>
+              <Text style={styles.eventDate}>{selectedEvent.startTime}</Text>
             </TouchableOpacity>
 
             {/* Button to open the modal and change the event */}

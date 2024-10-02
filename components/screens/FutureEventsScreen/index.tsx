@@ -74,7 +74,14 @@ export default function FutureEventsScreen() {
 
   if (user?.membershipStatus == "pending") {
     return (
-      <View style={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "white",
+        }}
+      >
         <Image
           source={require("@/assets/images/middle.png")}
           resizeMode="contain"
@@ -173,6 +180,11 @@ export default function FutureEventsScreen() {
                 const isRsvp = !!allRsvps?.find(
                   (rsvp) =>
                     rsvp.eventId === event._id && user?._id === rsvp.userId
+                );
+
+                console.log(
+                  JSON.stringify(event),
+                  "THIS IS THE EVENT ____________"
                 );
 
                 return (

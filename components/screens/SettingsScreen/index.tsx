@@ -78,7 +78,10 @@ const SettingsScreen: React.FC = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      style={{ backgroundColor: palette.offWhite }}
+    >
       <Text style={styles.header}>Settings</Text>
 
       <TouchableOpacity style={styles.button} onPress={handleResetPassword}>

@@ -19,6 +19,7 @@ import Checkbox from "expo-checkbox";
 import { useRouter } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
 import { sendNewUserNotification } from "@/services/notifications";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 
 const { width, height } = Dimensions.get("window");
 
@@ -81,177 +82,175 @@ const SignUpScreen: React.FC = () => {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <KeyboardAvoidingView
-        style={styles.container}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+    <KeyboardAwareScrollView
+      contentContainerStyle={styles.container}
+      style={{ backgroundColor: "white" }}
+    >
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "space-between",
+          paddingBottom: 20,
+          backgroundColor: "white",
+        }}
       >
         <View
           style={{
-            flex: 1,
-            justifyContent: "space-between",
-            paddingBottom: 20,
-            backgroundColor: "white",
+            height: height * 0.6,
+            justifyContent: "center",
+            gap: 20,
+          }}
+        >
+          <View style={{ gap: 16 }}>
+            <Text style={styles.title}>Let's Create An Account For You</Text>
+          </View>
+
+          <View style={{ gap: 20 }}>
+            {/* First Name */}
+            <View style={styles.inputContainer}>
+              <Text>First Name</Text>
+              <TextInput
+                placeholder="Cory"
+                placeholderTextColor={colors.neutral["300"]}
+                value={firstName}
+                onChangeText={setFirstName}
+                style={styles.input}
+              />
+            </View>
+
+            {/* Last Name */}
+            <View style={styles.inputContainer}>
+              <Text>Last Name</Text>
+              <TextInput
+                placeholder="Peters"
+                placeholderTextColor={colors.neutral["300"]}
+                value={lastName}
+                onChangeText={setLastName}
+                style={styles.input}
+              />
+            </View>
+
+            {/* Email */}
+            <View style={styles.inputContainer}>
+              <Text>Email Address</Text>
+              <TextInput
+                placeholder="hello@runclub.com"
+                placeholderTextColor={colors.neutral["300"]}
+                value={email}
+                onChangeText={setEmail}
+                keyboardType="email-address"
+                style={styles.input}
+              />
+            </View>
+
+            {/* Password */}
+            <View style={styles.inputContainer}>
+              <Text>Password</Text>
+              <View style={styles.passwordContainer}>
+                <TextInput
+                  placeholder="**********"
+                  secureTextEntry={!showPassword}
+                  placeholderTextColor={colors.neutral["300"]}
+                  value={password}
+                  onChangeText={setPassword}
+                  style={styles.input}
+                />
+                <Pressable onPress={() => setShowPassword(!showPassword)}>
+                  <Text>{showPassword ? "Hide" : "Show"}</Text>
+                </Pressable>
+              </View>
+            </View>
+
+            {/* Confirm Password */}
+            <View style={styles.inputContainer}>
+              <Text>Confirm Password</Text>
+              <View style={styles.passwordContainer}>
+                <TextInput
+                  placeholder="**********"
+                  secureTextEntry={!showPassword}
+                  placeholderTextColor={colors.neutral["300"]}
+                  value={confirmPassword}
+                  onChangeText={setConfirmPassword}
+                  style={styles.input}
+                />
+              </View>
+            </View>
+          </View>
+        </View>
+
+        {errorMessage ? (
+          <Text style={styles.errorText}>{errorMessage}</Text>
+        ) : null}
+
+        <View
+          style={{
+            gap: 12,
+            width: width,
+            alignItems: "flex-start",
+            justifyContent: "flex-start",
+            paddingHorizontal: 40,
           }}
         >
           <View
             style={{
-              height: height * 0.6,
-              justifyContent: "center",
+              flexDirection: "row",
               gap: 20,
+              alignItems: "flex-start",
+              justifyContent: "space-between",
             }}
           >
-            <View style={{ gap: 16 }}>
-              <Text style={styles.title}>Let's Create An Account For You</Text>
-            </View>
+            <Text
+              style={{
+                color: "blue",
+                fontWeight: "bold",
+              }}
+            >
+              Join Email List 🏃‍♂️
+            </Text>
 
-            <View style={{ gap: 20 }}>
-              {/* First Name */}
-              <View style={styles.inputContainer}>
-                <Text>First Name</Text>
-                <TextInput
-                  placeholder="John"
-                  placeholderTextColor={colors.neutral["300"]}
-                  value={firstName}
-                  onChangeText={setFirstName}
-                  style={styles.input}
-                />
-              </View>
-
-              {/* Last Name */}
-              <View style={styles.inputContainer}>
-                <Text>Last Name</Text>
-                <TextInput
-                  placeholder="Doe"
-                  placeholderTextColor={colors.neutral["300"]}
-                  value={lastName}
-                  onChangeText={setLastName}
-                  style={styles.input}
-                />
-              </View>
-
-              {/* Email */}
-              <View style={styles.inputContainer}>
-                <Text>Email Address</Text>
-                <TextInput
-                  placeholder="hello@yumyap.co"
-                  placeholderTextColor={colors.neutral["300"]}
-                  value={email}
-                  onChangeText={setEmail}
-                  keyboardType="email-address"
-                  style={styles.input}
-                />
-              </View>
-
-              {/* Password */}
-              <View style={styles.inputContainer}>
-                <Text>Password</Text>
-                <View style={styles.passwordContainer}>
-                  <TextInput
-                    placeholder="**********"
-                    secureTextEntry={!showPassword}
-                    placeholderTextColor={colors.neutral["300"]}
-                    value={password}
-                    onChangeText={setPassword}
-                    style={styles.input}
-                  />
-                  <Pressable onPress={() => setShowPassword(!showPassword)}>
-                    <Text>{showPassword ? "Hide" : "Show"}</Text>
-                  </Pressable>
-                </View>
-              </View>
-
-              {/* Confirm Password */}
-              <View style={styles.inputContainer}>
-                <Text>Confirm Password</Text>
-                <View style={styles.passwordContainer}>
-                  <TextInput
-                    placeholder="**********"
-                    secureTextEntry={!showPassword}
-                    placeholderTextColor={colors.neutral["300"]}
-                    value={confirmPassword}
-                    onChangeText={setConfirmPassword}
-                    style={styles.input}
-                  />
-                </View>
-              </View>
-            </View>
+            <Checkbox
+              value={emailList}
+              onValueChange={() => setEmailList(!emailList)}
+            />
           </View>
-
-          {errorMessage ? (
-            <Text style={styles.errorText}>{errorMessage}</Text>
-          ) : null}
-
           <View
             style={{
-              gap: 12,
-              width: width,
+              flexDirection: "row",
+              gap: 20,
               alignItems: "flex-start",
-              justifyContent: "flex-start",
-              paddingHorizontal: 40,
+              justifyContent: "space-between",
             }}
           >
-            <View
-              style={{
-                flexDirection: "row",
-                gap: 20,
-                alignItems: "flex-start",
-                justifyContent: "space-between",
-              }}
-            >
+            <Pressable onPress={handleTOSPressed}>
               <Text
                 style={{
+                  textDecorationLine: "underline",
                   color: "blue",
-                  fontWeight: "bold",
                 }}
               >
-                Join Email List 🏃‍♂️
+                Accept Terms of Service
               </Text>
-
-              <Checkbox
-                value={emailList}
-                onValueChange={() => setEmailList(!emailList)}
-              />
-            </View>
-            <View
-              style={{
-                flexDirection: "row",
-                gap: 20,
-                alignItems: "flex-start",
-                justifyContent: "space-between",
-              }}
-            >
-              <Pressable onPress={handleTOSPressed}>
-                <Text
-                  style={{
-                    textDecorationLine: "underline",
-                    color: "blue",
-                  }}
-                >
-                  Accept Terms of Service
-                </Text>
-              </Pressable>
-
-              <Checkbox
-                value={tosAccepted}
-                onValueChange={() => setTosAccepted(!tosAccepted)}
-              />
-            </View>
-            <Pressable style={styles.button} onPress={handleSignup}>
-              <Text style={styles.buttonText}>Create Account</Text>
             </Pressable>
-          </View>
-        </View>
 
-        {authLoading && (
-          <ActivityIndicator
-            size="large"
-            color="#0000ff"
-            style={styles.centeredView}
-          />
-        )}
-      </KeyboardAvoidingView>
-    </TouchableWithoutFeedback>
+            <Checkbox
+              value={tosAccepted}
+              onValueChange={() => setTosAccepted(!tosAccepted)}
+            />
+          </View>
+          <Pressable style={styles.button} onPress={handleSignup}>
+            <Text style={styles.buttonText}>Create Account</Text>
+          </Pressable>
+        </View>
+      </View>
+
+      {authLoading && (
+        <ActivityIndicator
+          size="large"
+          color="#0000ff"
+          style={styles.centeredView}
+        />
+      )}
+    </KeyboardAwareScrollView>
   );
 };
 
@@ -278,6 +277,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     paddingHorizontal: 12,
     gap: 4,
+    paddingVertical: 8,
   },
   input: {
     flex: 1,
@@ -289,13 +289,14 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   button: {
-    width: "90%",
+    width: "100%",
     height: 60,
     borderRadius: 30,
     backgroundColor: colors.primary["700"],
     alignItems: "center",
     justifyContent: "center",
     marginTop: 20,
+    marginBottom: 12,
   },
   centeredView: {
     position: "absolute",

@@ -1,9 +1,8 @@
+import LandingScreenTwo from "@/components/screens/LandingPageTwo";
+import LandingScreen from "@/components/screens/LandingScreen";
 import { Redirect } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { View, Text, ActivityIndicator } from "react-native";
 import useAuthStore from "../stores/auth"; // Adjust the path to your auth store
-import StaticSplashScreen from "@/components/screens/StaticSplashScreen";
-import { palette } from "@/constants/Colors";
 
 type Props = {};
 
@@ -22,14 +21,8 @@ const Screen: React.FC<Props> = () => {
       }, 2000);
     };
 
-    console.log(JSON.stringify(user), "THIS IS THE USER");
-
     checkAuth();
   }, [initializeAuth, user]);
-
-  if (loading) {
-    return <StaticSplashScreen />;
-  }
 
   return (
     <>
@@ -38,7 +31,7 @@ const Screen: React.FC<Props> = () => {
       ) : isAuthenticated && !user.isAdmin ? (
         <Redirect href={"/(tabs)/"} />
       ) : (
-        <Redirect href={"/(auth)/landing"} />
+        <LandingScreen />
       )}
     </>
   );

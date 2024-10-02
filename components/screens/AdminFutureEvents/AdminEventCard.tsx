@@ -2,7 +2,13 @@ import { BASE_URL } from "@/constants";
 import axiosInstance from "@/middleware/axios";
 import useAuthStore from "@/stores/auth";
 import { useRouter } from "expo-router";
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
+import React, {
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import {
   Image,
   Pressable,
@@ -58,7 +64,7 @@ const EventCard: React.FC<EventCardProps> = ({
 }) => {
   const [visible, setIsVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const token = useAuthStore.getState().token; // Get the token from the auth store
+  const token = useMemo(() => useAuthStore.getState().token, []);
 
   const [rsvps, setRsvps] = useState([]);
   const router = useRouter();
@@ -116,8 +122,8 @@ const EventCard: React.FC<EventCardProps> = ({
         <Text style={styles.location}>{location}</Text>
       </TouchableOpacity>
 
-      <Text style={styles.date}>Start: {formatDate(startTime)}</Text>
-      <Text style={styles.date}>End: {formatDate(endTime)}</Text>
+      <Text style={styles.date}>Start: {startTime}</Text>
+      <Text style={styles.date}>End: {endTime}</Text>
 
       <Text style={styles.description}>{description}</Text>
 

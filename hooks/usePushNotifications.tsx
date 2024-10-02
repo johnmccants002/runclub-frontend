@@ -4,6 +4,7 @@ import Constants from "expo-constants";
 import * as Device from "expo-device";
 import { Platform } from "react-native";
 import axios from "axios"; // Axios for API requests
+import { BASE_URL } from "@/constants";
 
 export default function usePushNotifications(userId: string) {
   // Pass userId as an argument
@@ -59,7 +60,7 @@ export default function usePushNotifications(userId: string) {
 // Function to save push token to backend
 async function savePushToken(userId: string, pushToken: string) {
   try {
-    await axios.post("http://localhost:5050/notifications/save-token", {
+    await axios.post(`${BASE_URL}/notifications/save-token`, {
       userId,
       pushToken,
     });
@@ -72,7 +73,7 @@ async function savePushToken(userId: string, pushToken: string) {
 // Function to remove push token from backend
 async function removePushToken(userId: string) {
   try {
-    await axios.delete("http://localhost:5050/notifications/remove-token", {
+    await axios.delete(`${BASE_URL}/notifications/remove-token`, {
       data: { userId }, // Pass userId in the request body
     });
     console.log("Push token removed successfully.");

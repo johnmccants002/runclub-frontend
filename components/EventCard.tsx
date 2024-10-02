@@ -83,8 +83,8 @@ const EventCard: React.FC<EventCardProps> = ({
         <Text style={styles.location}>{location}</Text>
       </TouchableOpacity>
 
-      <Text style={styles.date}>Start: {formatDate(startTime)}</Text>
-      <Text style={styles.date}>End: {formatDate(endTime)}</Text>
+      <Text style={styles.date}>Start: {startTime}</Text>
+      <Text style={styles.date}>End: {endTime}</Text>
 
       <Text style={styles.description}>{description}</Text>
 

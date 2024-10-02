@@ -73,7 +73,14 @@ const EventRsvps = (props: Props) => {
   // Render loading state
   if (loading) {
     return (
-      <View>
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "white",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
         <ActivityIndicator size="large" />
       </View>
     );
@@ -81,10 +88,17 @@ const EventRsvps = (props: Props) => {
 
   return (
     <View style={styles.container}>
-      <Stack.Screen options={{ title: `${rsvps.length} RSVPs` }} />
+      <Stack.Screen
+        options={{
+          title: `${rsvps.length} RSVPs`,
+          headerStyle: { backgroundColor: "white" },
+          headerTintColor: "black",
+        }}
+      />
       <FlatList
         data={users}
         keyExtractor={(item) => item._id}
+        style={{ backgroundColor: "white" }}
         renderItem={({ item }) => (
           <TouchableOpacity style={styles.userContainer}>
             <Image

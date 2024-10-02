@@ -18,6 +18,7 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 import useAuthStore from "@/stores/auth"; // Import the auth store for the token
+import { BASE_URL } from "@/constants";
 
 const CreateEventScreen: React.FC = () => {
   const [title, setTitle] = useState("");
@@ -70,7 +71,7 @@ const CreateEventScreen: React.FC = () => {
 
       try {
         const response = await axios.post(
-          "http://localhost:5050/events/upload",
+          `${BASE_URL}/events/upload`,
           formData, // FormData object containing the file and other fields
           {
             headers: {
@@ -172,15 +173,12 @@ const CreateEventScreen: React.FC = () => {
     if (!value) return;
 
     try {
-      const result = await axios.get(
-        `http://localhost:5050/locations/autocomplete`,
-        {
-          params: { input: value },
-          headers: {
-            Authorization: `Bearer ${token}`, // Include the token in the header
-          },
-        }
-      );
+      const result = await axios.get(`${BASE_URL}/locations/autocomplete`, {
+        params: { input: value },
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the header
+        },
+      });
       setPredictions(result.data); // Store predictions
     } catch (error) {
       console.error("Error fetching autocomplete predictions:", error);
@@ -189,15 +187,12 @@ const CreateEventScreen: React.FC = () => {
 
   const fetchPlaceDetails = async (place_id: string) => {
     console.log(place_id, "PLACE ID");
-    const response = await axios.get(
-      `http://localhost:5050/locations/place-details`,
-      {
-        params: { place_id },
-        headers: {
-          Authorization: `Bearer ${token}`, // Include the token in the header
-        },
-      }
-    );
+    const response = await axios.get(`${BASE_URL}/locations/place-details`, {
+      params: { place_id },
+      headers: {
+        Authorization: `Bearer ${token}`, // Include the token in the header
+      },
+    });
     return response;
   };
 
@@ -240,7 +235,10 @@ const CreateEventScreen: React.FC = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView
+      contentContainerStyle={styles.container}
+      style={{ backgroundColor: "#f8f8f8" }}
+    >
       <View style={styles.header}>
         <Ionicons name="calendar-outline" size={50} color="#3b5998" />
         <Text style={styles.headerText}>Create Event</Text>

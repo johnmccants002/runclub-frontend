@@ -1,4 +1,3 @@
-import { useAssets } from "expo-asset";
 import React, { useEffect, useState } from "react";
 import {
   Dimensions,
@@ -7,44 +6,29 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import AnimatedText from "../../../components/animated/AnimatedText";
-import { defaultStyles } from "../../../constants/Styles";
-
-import { ResizeMode, Video } from "expo-av";
+import AnimatedText from "../../components/animated/AnimatedText";
+import { defaultStyles } from "../../constants/Styles";
 import { Link } from "expo-router";
-import AnimatedSlideText from "../../../components/animated/AnimateSlideText";
-import { Colors } from "../../../constants/Colors";
-import SplashScreen from "../SplashScreen";
+import AnimatedSlideText from "../../components/animated/AnimateSlideText";
+import { Colors } from "../../constants/Colors";
+import SplashScreen from "./SplashScreen";
 
 type Props = {};
 
 const LandingScreen = (props: Props) => {
-  const [videoLoaded, setVideoLoaded] = useState(false);
-  const [showVideo, setShowVideo] = useState(false);
+  const [showContent, setShowContent] = useState(false);
 
   useEffect(() => {
-    if (videoLoaded) {
-      setTimeout(() => {
-        setShowVideo(true);
-      }, 3000);
-    }
-  }, [videoLoaded]);
+    setTimeout(() => {
+      setShowContent(true);
+    }, 3000);
+  }, []);
 
   const phrases = ["More Exercise", "More Friends", "More Vibes"];
 
   return (
     <View style={styles.container}>
-      <Video
-        resizeMode={ResizeMode.COVER}
-        isMuted
-        isLooping
-        shouldPlay
-        source={require("../../../assets/videos/runclub.mp4")}
-        style={styles.video}
-        onLoad={() => setVideoLoaded(true)} // Set videoLoaded to true when video is loaded
-      />
-
-      {videoLoaded && showVideo ? (
+      {showContent ? (
         <>
           <View style={styles.textContainer}>
             {phrases.map((phrase, index) => (
@@ -96,19 +80,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "space-between",
-    backgroundColor: "black",
+    backgroundColor: "darkgray", // Changed background color to dark gray
   },
   textContainer: {
     marginTop: 80,
     padding: 20,
     zIndex: 2,
-
     height: Dimensions.get("screen").height - 400,
-  },
-  video: {
-    width: "100%",
-    height: "100%",
-    position: "absolute",
   },
   header: {
     fontSize: 36,

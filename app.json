@@ -1,14 +1,15 @@
 {
   "expo": {
-    "name": "runclub",
+    "name": "916 Run Club",
     "slug": "runclub",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "orientation": "portrait",
-    "icon": "./assets/images/update.png",
+    "icon": "./assets/images/appicon.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
+    "assetBundlePatterns": ["assets/images/*", "assets/videos/*"],
     "splash": {
-      "image": "./assets/images/splash.png",
+      "image": "./assets/images/splash2.png",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -53,6 +54,12 @@
       "eas": {
         "projectId": "f29475a9-0b82-4173-a62a-450b235ceb38"
       }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/f29475a9-0b82-4173-a62a-450b235ceb38"
     }
   }
 }

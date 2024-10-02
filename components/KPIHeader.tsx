@@ -12,7 +12,7 @@ import {
 type Props = {};
 
 const KPIHeader = (props: Props) => {
-  const [assets] = useAssets([require("@/assets/videos/Park.mp4")]);
+  const [assets] = useAssets([require("../assets/videos/Park.mp4")]);
   const [videoLoaded, setVideoLoaded] = useState(false);
   // Use the hooks to fetch the number of accepted members
   const { data: acceptedThisWeek, isLoading: loadingWeek } =
@@ -22,17 +22,16 @@ const KPIHeader = (props: Props) => {
 
   return (
     <>
-      {assets && (
-        <Video
-          resizeMode={ResizeMode.COVER}
-          isMuted
-          isLooping
-          shouldPlay
-          source={{ uri: assets[0].uri }}
-          style={styles.video}
-          onLoad={() => setVideoLoaded(true)} // Set videoLoaded to true when video is loaded
-        />
-      )}
+      <Video
+        resizeMode={ResizeMode.COVER}
+        isMuted
+        isLooping
+        shouldPlay
+        source={require("../assets/videos/Park.mp4")}
+        style={styles.video}
+        onLoad={() => setVideoLoaded(true)} // Set videoLoaded to true when video is loaded
+      />
+
       <View style={styles.kpisContainer}>
         <View style={{ flexDirection: "row", gap: 20 }}>
           <View style={styles.kpi}>

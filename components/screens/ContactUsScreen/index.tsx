@@ -1,48 +1,32 @@
-import FadingImages from "@/components/animated/FadingImages";
 import React from "react";
 import {
-  View,
-  Text,
   Linking,
   StyleSheet,
+  Text,
   TouchableOpacity,
-  ScrollView,
+  View,
 } from "react-native";
-import { Colors, palette } from "@/constants/Colors";
+
 const ContactUsScreen = () => {
   return (
-    <View
-      style={{
-        flex: 1,
-        backgroundColor: palette.offWhite,
-        padding: 20,
-        justifyContent: "space-evenly",
-      }}
-    >
-      <View style={{ marginTop: 40 }}>
-        <FadingImages />
-      </View>
-      <View>
-        <View style={{ gap: 8 }}>
-          <Text style={styles.label}>Instagram:</Text>
-          <TouchableOpacity
-            onPress={() => Linking.openURL("https://instagram.com/916RunClub")}
-          >
-            <Text style={styles.link}>@916RunClub</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={{ gap: 8 }}>
-          <Text style={styles.label}>Email:</Text>
-          <TouchableOpacity
-            onPress={() => Linking.openURL("mailto:info@916runclub.com")}
-          >
-            <Text style={styles.link}>info@916runclub.com</Text>
-          </TouchableOpacity>
-        </View>
+    <View style={styles.container}>
+      <View style={styles.infoContainer}>
+        <Text style={styles.label}>Instagram:</Text>
+        <TouchableOpacity
+          onPress={() => Linking.openURL("https://instagram.com/916RunClub")}
+        >
+          <Text style={styles.link}>@916RunClub</Text>
+        </TouchableOpacity>
       </View>
 
-      {/* Add other sections like phone, address, etc. */}
+      <View style={styles.infoContainer}>
+        <Text style={styles.label}>Email:</Text>
+        <TouchableOpacity
+          onPress={() => Linking.openURL("mailto:info@916runclub.com")}
+        >
+          <Text style={styles.link}>info@916runclub.com</Text>
+        </TouchableOpacity>
+      </View>
 
       <Text style={styles.footer}>
         © 2024 916 Run Club. All rights reserved.
@@ -53,36 +37,35 @@ const ContactUsScreen = () => {
 
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
+    flex: 1,
+    backgroundColor: "white", // Dark modern background
     padding: 20,
-    backgroundColor: "#ffffff",
-    justifyContent: "center",
+    paddingTop: 40,
   },
-  header: {
-    fontSize: 28,
+  title: {
+    fontSize: 24,
     fontWeight: "bold",
+    color: "#ffffff", // White text for title
+    marginBottom: 30,
+    textAlign: "center",
+  },
+  infoContainer: {
     marginBottom: 20,
-    color: "#333",
   },
   label: {
-    fontSize: 18,
-    color: "#555",
-    marginBottom: 5,
+    fontSize: 16,
+    color: "#aaaaaa", // Light grey for labels
+    marginBottom: 8,
   },
   link: {
-    fontSize: 20,
-    color: "#1e90ff",
-    marginBottom: 20,
+    fontSize: 18,
+    color: "#1e90ff", // Modern blue color for links
   },
   footer: {
     fontSize: 14,
-    color: "#aaa",
-    marginTop: 30,
+    color: "#666666", // Dark grey for footer text
+    marginTop: 40,
     textAlign: "center",
-    position: "absolute",
-    bottom: 20,
-    left: 0,
-    right: 0,
   },
 });
 

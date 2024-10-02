@@ -11,7 +11,9 @@ const Layout = (props: Props) => {
         name="contact"
         options={{
           headerBackTitleVisible: false,
-          headerTransparent: true,
+          headerStyle: { backgroundColor: "white" },
+          headerTitleStyle: { color: "black" },
+
           headerTitle: "Contact Us",
         }}
       />
@@ -23,25 +25,13 @@ const Layout = (props: Props) => {
           headerTitle: "",
         }}
       />
-      <Stack.Screen
-        name="members"
-        options={{
-          headerBackTitleVisible: false,
-          headerTitle: "Members",
-        }}
-      />
-      <Stack.Screen
-        name="pending-members"
-        options={{
-          headerBackTitleVisible: false,
-          headerTitle: "Pending",
-        }}
-      />
+
       <Stack.Screen
         name="settings"
         options={{
           headerBackTitleVisible: false,
           headerTitle: "",
+          headerStyle: { backgroundColor: "white" },
         }}
       />
     </Stack>

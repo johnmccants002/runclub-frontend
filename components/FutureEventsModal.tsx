@@ -41,9 +41,7 @@ const FutureEventsModal: React.FC<FutureEventsModalProps> = ({
               <TouchableOpacity onPress={() => onSelectEvent(item)}>
                 <View style={styles.eventItem}>
                   <Text style={styles.eventTitle}>{item.title}</Text>
-                  <Text style={styles.eventDate}>
-                    {new Date(item.startTime).toLocaleString()}
-                  </Text>
+                  <Text style={styles.eventDate}>{item.startTime}</Text>
                 </View>
               </TouchableOpacity>
             )}

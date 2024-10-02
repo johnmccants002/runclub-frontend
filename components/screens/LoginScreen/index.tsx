@@ -16,6 +16,19 @@ import { useLoginMutation } from "../../../services/auth"; // Adjust the path ac
 
 type Props = {};
 
+const colors = {
+  primary: {
+    "700": "#4F46E5",
+  },
+  whiteBlack: {
+    "50": "#FFFFFF",
+  },
+  neutral: {
+    "200": "#E5E7EB",
+    "300": "#9CA3AF",
+    "700": "#374151",
+  },
+};
 const LoginScreen = (props: Props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -62,11 +75,12 @@ const LoginScreen = (props: Props) => {
               <TextInput
                 value={email}
                 onChangeText={setEmail}
-                placeholder="jon@gmail.com"
+                placeholder="john@gmail.com"
                 style={styles.input}
                 keyboardType="email-address"
                 autoCapitalize="none"
                 autoCorrect={false}
+                placeholderTextColor={colors.neutral["300"]}
               />
             </View>
 
@@ -77,6 +91,7 @@ const LoginScreen = (props: Props) => {
                 onChangeText={setPassword}
                 placeholder="Enter your password"
                 style={styles.input}
+                placeholderTextColor={colors.neutral["300"]}
                 secureTextEntry
               />
             </View>
@@ -116,7 +131,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.primary.lightGray,
     padding: 20,
     borderRadius: 16,
-    fontSize: 20,
+    fontSize: 16,
     marginRight: 10,
   },
   enabled: {

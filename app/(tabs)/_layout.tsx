@@ -1,10 +1,8 @@
-import { Link, Tabs, useRouter } from "expo-router";
+import { Tabs, useRouter } from "expo-router";
 import React, { useEffect } from "react";
 
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
-import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { Pressable, Text } from "react-native";
 import useAuthStore from "@/stores/auth";
 
 export default function TabLayout() {

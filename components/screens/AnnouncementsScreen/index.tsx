@@ -1,17 +1,16 @@
 import React from "react";
 import {
-  Image,
-  StyleSheet,
-  View,
-  Text,
-  ScrollView,
   ActivityIndicator,
+  Image,
   ImageSourcePropType,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
-import ParallaxScrollView from "../../ParallaxScrollView";
-import Announcement from "../../Announcement";
 import { useAnnouncementsQuery } from "../../../services/announcements";
 import { Announcement as AnnouncementType } from "../../../types/types";
+import Announcement from "../../Announcement";
+import ParallaxScrollView from "../../ParallaxScrollView";
 
 export default function HomeScreen() {
   const { data: announcements, isLoading, error } = useAnnouncementsQuery();

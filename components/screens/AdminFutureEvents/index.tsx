@@ -27,7 +27,7 @@ export default function FutureEventsScreen() {
     data: user,
     error: err,
     isLoading,
-  } = useUserQuery(currentUser.userId);
+  } = useUserQuery(currentUser?.userId);
 
   // Mutation to RSVP for an event
   const { mutate: createRsvp, status: createStatus } = useCreateRsvpMutation();
@@ -129,6 +129,10 @@ export default function FutureEventsScreen() {
                 // Find if the user has RSVP'd to this event
                 const isRsvp = !!allRsvps?.find(
                   (rsvp) => rsvp.eventId === event._id
+                );
+                console.log(
+                  JSON.stringify(event),
+                  "THIS IS THE EVENT ____________"
                 );
 
                 return (

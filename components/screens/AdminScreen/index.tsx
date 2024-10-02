@@ -93,7 +93,7 @@ export default function AdminScreen() {
 
       {/* FlatList */}
       <FlatList
-        data={isAdmin ? ADMIN_DATA : DATA}
+        data={ADMIN_DATA}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContent}

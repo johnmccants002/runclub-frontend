@@ -1,9 +1,7 @@
-import KPIHeader from "@/components/KPIHeader";
 import { Colors } from "@/constants/Colors";
+import axios from "@/middleware/axios";
 import useAuthStore from "@/stores/auth";
 import { Ionicons } from "@expo/vector-icons";
-import axios from "@/middleware/axios";
-import { BlurView } from "expo-blur";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import QRCode from "react-native-qrcode-svg";
@@ -29,15 +27,8 @@ export interface User {
   qrCode?: string; // Optional QR code field
 }
 
-import {
-  FlatList,
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
 import { BASE_URL } from "@/constants";
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 
 const DATA = [
   {
@@ -61,55 +52,9 @@ const DATA = [
   },
 ];
 
-const ADMIN_DATA = [
-  {
-    id: "1",
-    title: "Contact Us",
-    icon: "call-outline",
-    route: "/admin/about/contact",
-  },
-  {
-    id: "2",
-    title: "About Us",
-    icon: "information-circle-outline",
-    route: "/admin/about/aboutus",
-  },
-  {
-    id: "3",
-    title: "Notifications",
-    icon: "notifications-outline",
-    route: "/admin/about/contact",
-  },
-  {
-    id: "4",
-    title: "Run Club Members",
-    icon: "person",
-    route: "/admin/about/members",
-  },
-  {
-    id: "5",
-    title: "Pending Members",
-    icon: "list",
-    route: "/admin/about/pending-members",
-  },
-  {
-    id: "6",
-    title: "Settings",
-    icon: "settings",
-    route: "/admin/about/settings",
-  },
-  {
-    id: "7",
-    title: "Scanner",
-    icon: "camera",
-    route: "/admin/about/qr-code-scanner",
-  },
-];
-
 export default function AboutSectionScreen() {
   const router = useRouter();
 
-  const isAdmin = useAuthStore((state) => state.isAdmin);
   const [loading, setLoading] = useState(false);
   const user = useAuthStore((state) => state.user);
   const token = useAuthStore.getState().token; // Get the token from the auth store
@@ -134,10 +79,6 @@ export default function AboutSectionScreen() {
 
         console.log(response.data?.qrCode);
         setCurrentUser(response.data);
-
-        if (currentUser && currentUser.qrCode) {
-          setQrCode(currentUser.qrCode);
-        }
       } catch (error) {
         console.error("Error fetching current user:", error);
       } finally {
@@ -168,36 +109,36 @@ export default function AboutSectionScreen() {
       {/* Header Image */}
       <View style={styles.backgroundCover}></View>
 
-      {isAdmin ? (
-        <KPIHeader />
-      ) : (
-        <View style={styles.header}>
-          {currentUser?.membershipStatus === "accepted" && loading !== true ? (
-            <QRCode
-              value={currentUser._id} // This could be the userId or a URL containing the userId
-              size={200} // Adjust the size of the QR code as needed
-            />
-          ) : (
+      <View style={styles.header}>
+        {currentUser?.membershipStatus === "accepted" && loading !== true ? (
+          <QRCode value={currentUser?._id} size={200} />
+        ) : (
+          <View
+            style={{
+              width: 200,
+              height: 200,
+              backgroundColor: "white",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             <Text style={styles.text}>
               Your QR Code will be right here when you get accepted.
             </Text>
-          )}
-          <View style={styles.info}>
-            <View style={styles.infoDescription}>
-              <Text style={styles.numberText}>
-                {currentUser?.firstName} {currentUser?.lastName}
-              </Text>
-              <Text style={styles.numberText}>
-                Favorite Brunch Spot: 58 & Holding
-              </Text>
-            </View>
+          </View>
+        )}
+        <View style={styles.info}>
+          <View style={styles.infoDescription}>
+            <Text style={styles.numberText}>
+              {currentUser?.firstName} {currentUser?.lastName}
+            </Text>
+            <Text style={styles.numberText}></Text>
           </View>
         </View>
-      )}
+      </View>
 
-      {/* FlatList */}
       <FlatList
-        data={isAdmin ? ADMIN_DATA : DATA}
+        data={DATA}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.listContent}
@@ -224,7 +165,9 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
+    fontWeight: "semibold",
     color: "#333",
+    textAlign: "center",
   },
   itemContainer: {
     flexDirection: "row",
@@ -269,7 +212,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   numberText: {
-    fontFamily: "PilcrowRounded",
     fontSize: 18,
     color: "black",
   },
