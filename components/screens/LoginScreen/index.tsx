@@ -1,6 +1,6 @@
-import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
+  Alert,
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
@@ -8,7 +8,6 @@ import {
   TextInput,
   TouchableOpacity,
   View,
-  Alert,
 } from "react-native";
 import { Colors } from "../../../constants/Colors";
 import { defaultStyles } from "../../../constants/Styles";

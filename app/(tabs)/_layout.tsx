@@ -6,11 +6,9 @@ import { useColorScheme } from "@/hooks/useColorScheme";
 import useAuthStore from "@/stores/auth";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
   const router = useRouter();
 
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const token = useAuthStore((state) => state.token);
 
   useEffect(() => {
     if (!isAuthenticated) {

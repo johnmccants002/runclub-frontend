@@ -3,6 +3,7 @@ import axios from "@/middleware/axios";
 import { BASE_URL } from "@/constants";
 import useEventsStore from "@/stores/events";
 import useAuthStore from "@/stores/auth"; // Import the auth store for the token
+import React from "react";
 
 export interface EventInput {
   id: string;
@@ -106,19 +107,27 @@ export const useFutureEventsMutation = () => {
 // Query to fetch all future events and store them in Zustand
 export const useFutureEventsQuery = () => {
   console.log("GRABBING FUTURE EVENTS");
-  const token = useAuthStore.getState().token; // Get the token from the auth store
+  const token = React.useMemo(
+    () => useAuthStore.getState().token,
+    [useAuthStore]
+  );
 
   return useQuery<Event[]>({
-    queryKey: ["future-events"], // The unique key for this query
+    queryKey: ["future-events", token], // Include token in the key to track uniqueness
     queryFn: async () => {
+      if (!token) {
+        throw new Error("No token provided");
+      }
       const response = await axios.get(`${BASE_URL}/events/future`, {
         headers: {
           Authorization: `Bearer ${token}`, // Include the token in the header
         },
       });
 
-      console.log(response.status);
       return response.data.events;
-    }, // The function that fetches future events
+    },
+    enabled: !!token, // Only run the query if the token exists
+    retry: 1, // Limit retry attempts to avoid an infinite loop
+    staleTime: 60000, // Set a stale time (e.g., 1 minute) to prevent frequent re-fetches
   });
 };

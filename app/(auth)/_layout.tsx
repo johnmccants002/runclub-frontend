@@ -1,9 +1,9 @@
 import useAuthStore from "@/stores/auth";
-import { Colors } from "../../constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
-import { Link, Stack, useRouter } from "expo-router";
+import { Stack, useRouter } from "expo-router";
 import React, { useEffect } from "react";
 import { TouchableOpacity } from "react-native";
+import { Colors } from "../../constants/Colors";
 
 type Props = {};
 

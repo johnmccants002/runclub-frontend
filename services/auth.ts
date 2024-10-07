@@ -50,7 +50,8 @@ interface LogoutResponse {
 }
 
 export const useLoginMutation = () => {
-  const { setToken, setAuthLoading, setAdmin } = useAuthStore();
+  const { setToken, setAuthLoading, setAdmin, setRefreshToken } =
+    useAuthStore();
 
   return useMutation<LoginResponse, Error, LoginParams>({
     mutationFn: async ({ email, password }: LoginParams) => {
@@ -65,7 +66,7 @@ export const useLoginMutation = () => {
       return data;
     },
     onSuccess: (data) => {
-      setToken(data.token);
+      setToken(data.token, data.refreshToken);
       setAdmin(data.user.isAdmin);
       setAuthLoading(false);
     },
@@ -94,7 +95,7 @@ export const useRegisterMutation = () => {
     },
     onSuccess: (data) => {
       setAuthLoading(false);
-      setToken(data.token);
+      setToken(data.token, data.refreshToken);
       setAdmin(data.user.isAdmin);
     },
     onError: (error) => {
