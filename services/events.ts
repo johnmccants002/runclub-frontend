@@ -113,7 +113,7 @@ export const useFutureEventsQuery = () => {
   );
 
   return useQuery<Event[]>({
-    queryKey: ["future-events", token], // Include token in the key to track uniqueness
+    queryKey: ["future-events"], // Include token in the key to track uniqueness
     queryFn: async () => {
       if (!token) {
         throw new Error("No token provided");
@@ -126,8 +126,5 @@ export const useFutureEventsQuery = () => {
 
       return response.data.events;
     },
-    enabled: !!token, // Only run the query if the token exists
-    retry: 1, // Limit retry attempts to avoid an infinite loop
-    staleTime: 60000, // Set a stale time (e.g., 1 minute) to prevent frequent re-fetches
   });
 };

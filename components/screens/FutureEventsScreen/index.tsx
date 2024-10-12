@@ -13,7 +13,6 @@ import useAuthStore from "@/stores/auth";
 import SkeletonEventCard from "./skeleton";
 import usePushNotifications from "@/hooks/usePushNotifications";
 import { useUserQuery } from "@/services/user";
-import { useCallback } from "react";
 
 export default function FutureEventsScreen() {
   const {
@@ -111,51 +110,48 @@ export default function FutureEventsScreen() {
   // Function to handle RSVP
 
   // Memoize the handleRsvp function with useCallback
-  const handleRsvp = useCallback(
-    (
-      eventId: string,
-      userId: string,
-      isRsvp: boolean,
-      setLoading: Dispatch<SetStateAction<boolean>>
-    ) => {
-      console.log("HANDLING RSVP");
-      setLoading(true);
-      if (isRsvp) {
-        // Call the delete RSVP mutation
-        deleteRsvp(
-          { userId, eventId },
-          {
-            onSuccess: () => {
-              console.log(`RSVP removed for event ${eventId}`);
-              // Optionally, refetch RSVPs or show a success message
-            },
-            onError: (error) => {
-              console.error(
-                `Failed to remove RSVP for event ${eventId}:`,
-                error
-              );
-            },
-          }
-        );
-      } else {
-        // Call the create RSVP mutation
-        createRsvp(
-          { userId, eventId },
-          {
-            onSuccess: () => {
-              console.log(`RSVP successful for event ${eventId}`);
-              // Optionally, refetch RSVPs or show a success message
-            },
-            onError: (error) => {
-              console.error(`Failed to RSVP for event ${eventId}:`, error);
-            },
-          }
-        );
-      }
-      setLoading(false);
-    },
-    [createRsvp, deleteRsvp] // Dependencies of the callback
-  );
+  const handleRsvp = (
+    eventId: string,
+    userId: string,
+    isRsvp: boolean,
+    setLoading: Dispatch<SetStateAction<boolean>>
+  ) => {
+    console.log("HANDLING RSVP");
+    userId = currentUser?.userId;
+
+    setLoading(true);
+    if (!currentUser?.userId) return;
+    if (isRsvp) {
+      // Call the delete RSVP mutation
+      deleteRsvp(
+        { userId, eventId },
+        {
+          onSuccess: () => {
+            console.log(`RSVP removed for event ${eventId}`);
+            // Optionally, refetch RSVPs or show a success message
+          },
+          onError: (error) => {
+            console.error(`Failed to remove RSVP for event ${eventId}:`, error);
+          },
+        }
+      );
+    } else {
+      // Call the create RSVP mutation
+      createRsvp(
+        { userId, eventId },
+        {
+          onSuccess: () => {
+            console.log(`RSVP successful for event ${eventId}`);
+            // Optionally, refetch RSVPs or show a success message
+          },
+          onError: (error) => {
+            console.error(`Failed to RSVP for event ${eventId}:`, error);
+          },
+        }
+      );
+    }
+    setLoading(false);
+  };
 
   return (
     <>
@@ -180,9 +176,11 @@ export default function FutureEventsScreen() {
             <>
               {futureEvents?.map((event: EventType) => {
                 // Find if the user has RSVP'd to this event
+                console.log(allRsvps, "RSVPS");
                 const isRsvp = !!allRsvps?.find(
                   (rsvp) =>
-                    rsvp.eventId === event._id && user?._id === rsvp.userId
+                    rsvp.eventId === event._id &&
+                    currentUser?.userId === rsvp.userId
                 );
 
                 return (

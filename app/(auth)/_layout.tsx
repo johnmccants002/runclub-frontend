@@ -24,6 +24,7 @@ const Layout = () => {
   return (
     <Stack>
       <Stack.Screen name="landing" options={{ headerShown: false }} />
+      <Stack.Screen name="forgot-password" options={{ headerTitle: "" }} />
       <Stack.Screen
         name="login"
         options={{

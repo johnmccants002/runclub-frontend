@@ -3,6 +3,7 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   StyleSheet,
   Text,
   TextInput,
@@ -12,6 +13,7 @@ import {
 import { Colors } from "../../../constants/Colors";
 import { defaultStyles } from "../../../constants/Styles";
 import { useLoginMutation } from "../../../services/auth"; // Adjust the path according to your project structure
+import { useRouter } from "expo-router";
 
 type Props = {};
 
@@ -33,6 +35,7 @@ const LoginScreen = (props: Props) => {
   const [password, setPassword] = useState("");
   const keyboardVerticalOffset = Platform.OS === "ios" ? 20 : 0;
   const loginMutation = useLoginMutation();
+  const router = useRouter();
 
   async function signInWithEmail() {
     if (!email || !password) {
@@ -93,6 +96,18 @@ const LoginScreen = (props: Props) => {
                 placeholderTextColor={colors.neutral["300"]}
                 secureTextEntry
               />
+              <Pressable
+                style={{
+                  position: "relative",
+                  bottom: 0,
+                  right: 0,
+                  alignItems: "flex-end",
+                  marginTop: 6,
+                }}
+                onPress={() => router.push("/(auth)/forgot-password")}
+              >
+                <Text style={{ color: "blue" }}>Forgot Password?</Text>
+              </Pressable>
             </View>
           </View>
 

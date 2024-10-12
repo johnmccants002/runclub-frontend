@@ -97,7 +97,7 @@ const fetchAllRsvps = async (): Promise<
     },
   });
 
-  console.log("FETCHED RSVPS");
+  console.log("THESE ARE THE RSVPS: ", data.rsvps);
 
   return data.rsvps; // Assuming the response contains an array of RSVPs
 };

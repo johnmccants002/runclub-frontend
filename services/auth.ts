@@ -125,3 +125,37 @@ export const useLogoutMutation = () => {
     },
   });
 };
+
+const FORGOT_PASSWORD_URL = "http://localhost:5050/auth/forgot-password";
+
+interface ForgotPasswordResponse {
+  message: string;
+}
+
+interface ForgotPasswordError {
+  message: string;
+}
+
+export const useForgotPasswordMutation = () => {
+  return useMutation<
+    ForgotPasswordResponse,
+    ForgotPasswordError,
+    { email: string }
+  >({
+    mutationFn: async ({ email }) => {
+      const { data } = await axios.post<ForgotPasswordResponse>(
+        `${BASE_URL}/auth/forgot-password`,
+        { email }
+      );
+      return data;
+    },
+    onSuccess: (data) => {
+      console.log("Forgot password email sent:", data.message);
+      // Optionally, show success notification
+    },
+    onError: (error) => {
+      console.error("Forgot password request failed", error);
+      // Optionally, show error notification
+    },
+  });
+};
