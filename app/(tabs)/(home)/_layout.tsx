@@ -1,8 +1,6 @@
-import { Ionicons } from "@expo/vector-icons";
-import { Stack, useRouter } from "expo-router";
+import { Stack } from "expo-router";
 import React from "react";
 
-import { Pressable, Text } from "react-native";
 type Props = {};
 
 const Layout = (props: Props) => {

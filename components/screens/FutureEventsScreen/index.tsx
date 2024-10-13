@@ -33,7 +33,9 @@ export default function FutureEventsScreen() {
   const { mutate: createRsvp, status: createStatus } = useCreateRsvpMutation();
   const { mutate: deleteRsvp, status: deleteStatus } = useDeleteRsvpMutation();
 
-  const { expoPushToken, notification } = usePushNotifications(user?._id);
+  const { expoPushToken, notification } = usePushNotifications(
+    currentUser?.userId
+  );
 
   const rsvpLoading = createStatus === "pending" || deleteStatus === "pending";
 
