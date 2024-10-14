@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { showLocation } from "react-native-map-link";
 import ImageView from "react-native-image-viewing";
+import { useRouter } from "expo-router";
 
 // Utility function to format the date
 const formatDate = (timestamp: string) => {
@@ -54,9 +55,13 @@ const EventCard: React.FC<EventCardProps> = ({
 }) => {
   const [visible, setIsVisible] = useState(false);
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   return (
-    <View style={styles.card}>
+    <TouchableOpacity
+      style={styles.card}
+      onPress={() => router.push(`/events/${eventId}`)}
+    >
       {visible ? (
         <ImageView
           images={[{ uri: imageUrl }]}
@@ -105,7 +110,7 @@ const EventCard: React.FC<EventCardProps> = ({
           </Text>
         )}
       </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   );
 };
 

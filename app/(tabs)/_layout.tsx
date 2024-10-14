@@ -2,13 +2,14 @@ import { Tabs, useRouter } from "expo-router";
 import React, { useEffect } from "react";
 
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
-import { useColorScheme } from "@/hooks/useColorScheme";
+import { useNotificationObserver } from "@/hooks/useNotificationObserver";
 import useAuthStore from "@/stores/auth";
 
 export default function TabLayout() {
   const router = useRouter();
 
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  useNotificationObserver();
 
   useEffect(() => {
     if (!isAuthenticated) {

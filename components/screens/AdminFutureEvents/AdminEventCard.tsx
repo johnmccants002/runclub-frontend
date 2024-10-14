@@ -95,7 +95,10 @@ const EventCard: React.FC<EventCardProps> = ({
   }, [eventId, token]); // Add eventId and token as dependencies
 
   return (
-    <View style={styles.card}>
+    <TouchableOpacity
+      style={styles.card}
+      onPress={() => router.push(`/events/${eventId}`)}
+    >
       {visible ? (
         <ImageView
           images={[{ uri: imageUrl }]}
@@ -109,7 +112,6 @@ const EventCard: React.FC<EventCardProps> = ({
         </TouchableOpacity>
       )}
       <Text style={styles.title}>{title}</Text>
-
       <TouchableOpacity
         onPress={() =>
           showLocation({
@@ -121,12 +123,9 @@ const EventCard: React.FC<EventCardProps> = ({
       >
         <Text style={styles.location}>{location}</Text>
       </TouchableOpacity>
-
       <Text style={styles.date}>Start: {startTime}</Text>
       <Text style={styles.date}>End: {endTime}</Text>
-
       <Text style={styles.description}>{description}</Text>
-
       <View
         style={{
           flex: 1,
@@ -150,7 +149,7 @@ const EventCard: React.FC<EventCardProps> = ({
           </Text>
         </Pressable>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

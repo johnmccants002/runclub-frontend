@@ -23,6 +23,14 @@ const Layout = (props: Props) => {
           headerTitle: "",
         }}
       />
+      <Stack.Screen
+        name="events/[eventId]"
+        options={{
+          title: `Event`,
+          headerStyle: { backgroundColor: "white" },
+          headerTintColor: "black",
+        }}
+      />
     </Stack>
   );
 };
