@@ -25,6 +25,74 @@ const EventDetailsScreen: React.FC = () => {
   const [visible, setIsVisible] = useState(false); // Image viewer state
   const token = useAuthStore.getState().token; // Get the token from the auth store
   const router = useRouter();
+  const [rsvp, setRsvp] = useState(false);
+
+  const currentUser = useAuthStore((state) => state.user);
+
+  const fetchUserRsvp = async () => {
+    console.log("FETCHING User RSVP");
+    try {
+      // Fetch event details from the backend
+      const response = await axios.get(
+        `${BASE_URL}/rsvps/${params.id}/user/${currentUser.userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the header
+          },
+        }
+      );
+      console.log("THIS IS THE EVENT DETAILS", response.data);
+      setRsvp(true);
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setLoading(false);
+      setRsvp(false);
+    }
+  };
+
+  const rsvpToEvent = async () => {
+    try {
+      const { data } = await axios.post(
+        `${BASE_URL}/rsvps`,
+        {
+          userId: currentUser.userId,
+          eventId: params.id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the header
+          },
+        }
+      );
+      setRsvp(true);
+      setLoading(false);
+    } catch (err) {
+      console.log(err);
+      setError("Failed to load event details");
+      setLoading(false);
+      setRsvp(false);
+    }
+  };
+
+  const unrsvpToEvent = async () => {
+    try {
+      const response = await fetch(
+        `${BASE_URL}/rsvps/${params.id}/${currentUser.userId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the header
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      setRsvp(false);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
   useEffect(() => {
     console.log(JSON.stringify(params));
@@ -41,6 +109,7 @@ const EventDetailsScreen: React.FC = () => {
         console.log("THIS IS THE EVENT DETAILS", response.data);
         setEvent(response.data); // Set event data
         setLoading(false);
+        fetchUserRsvp();
       } catch (err) {
         console.log(err);
         setError("Failed to load event details");
@@ -49,7 +118,7 @@ const EventDetailsScreen: React.FC = () => {
     };
 
     fetchEventDetails();
-  }, [params.id]); // Fetch event data on component mount and eventId change
+  }, [params.id, rsvp]); // Fetch event data on component mount and eventId change
 
   if (loading) {
     return (
@@ -125,17 +194,23 @@ const EventDetailsScreen: React.FC = () => {
 
         {/* RSVP Button */}
         <TouchableOpacity
-          style={[styles.rsvpButton, styles.rsvpButtonInactive]}
+          style={[
+            styles.rsvpButton,
+            rsvp ? styles.rsvpButtonActive : styles.rsvpButtonInactive,
+          ]}
           onPress={() => {
-            // Handle RSVP logic here
+            if (rsvp) {
+              unrsvpToEvent();
+            } else {
+              rsvpToEvent();
+            }
           }}
         >
           {loading ? (
             <ActivityIndicator color="#fff" />
           ) : (
             <Text style={styles.rsvpButtonText}>
-              RSVP
-              {/* {event.isRsvp ? "RSVP'd" : "RSVP"} */}
+              {rsvp ? "RSVP'd" : "RSVP"}
             </Text>
           )}
         </TouchableOpacity>

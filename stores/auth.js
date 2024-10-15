@@ -109,7 +109,13 @@ const useAuthStore = create((set) => ({
     } else {
       await SecureStore.deleteItemAsync("authToken");
     }
-    set({ token: null, isAuthenticated: false, isAdmin: false, user: null });
+    set({
+      token: null,
+      refreshToken: null,
+      isAuthenticated: false,
+      isAdmin: false,
+      user: null,
+    });
   },
   refreshAuthToken: async () => {
     let refreshToken;
