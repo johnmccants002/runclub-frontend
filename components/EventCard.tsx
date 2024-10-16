@@ -1,15 +1,15 @@
+import { useRouter } from "expo-router";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import {
+  ActivityIndicator,
   Image,
+  Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
-  ActivityIndicator,
 } from "react-native";
-import { showLocation } from "react-native-map-link";
 import ImageView from "react-native-image-viewing";
-import { useRouter } from "expo-router";
+import { showLocation } from "react-native-map-link";
 
 // Utility function to format the date
 const formatDate = (timestamp: string) => {
@@ -58,7 +58,7 @@ const EventCard: React.FC<EventCardProps> = ({
   const router = useRouter();
 
   return (
-    <TouchableOpacity
+    <Pressable
       style={styles.card}
       onPress={() => router.push(`/events/${eventId}`)}
     >
@@ -110,7 +110,7 @@ const EventCard: React.FC<EventCardProps> = ({
           </Text>
         )}
       </TouchableOpacity>
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 

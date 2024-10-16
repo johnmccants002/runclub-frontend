@@ -24,11 +24,9 @@ const deleteUser = async (userId: string): Promise<void> => {
 // Function to fetch the user data
 const fetchUser = async (userId: string): Promise<User> => {
   console.log(userId, "USER ID FUNCTION BEING CALLED");
-  const token = React.useMemo(
-    () => useAuthStore.getState().token,
-    [useAuthStore]
-  );
+  const token = useAuthStore.getState().token;
 
+  console.log(`${BASE_URL}/users/${userId}`);
   const { data } = await axios.get<User>(`${BASE_URL}/users/${userId}`, {
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -40,7 +38,6 @@ export const useUserQuery = (userId: string) => {
   return useQuery<User, Error>({
     queryKey: ["user", userId],
     queryFn: () => fetchUser(userId),
-    enabled: !!userId, // Only run the query if userId is truthy
   });
 };
 

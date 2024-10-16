@@ -138,7 +138,10 @@ const EventDetailsScreen: React.FC = () => {
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={{ backgroundColor: "white" }}
+    >
       {/* Image Viewer */}
 
       {visible ? (
@@ -222,12 +225,13 @@ const EventDetailsScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#f7f7f7",
+    backgroundColor: "white",
   },
   loaderContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    backgroundColor: "white",
   },
   image: {
     width: "100%",

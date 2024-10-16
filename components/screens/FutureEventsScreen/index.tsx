@@ -68,6 +68,8 @@ export default function FutureEventsScreen() {
     );
   }
 
+  console.log(currentUser, "this is the user");
+
   if (user?.membershipStatus == "pending") {
     return (
       <View

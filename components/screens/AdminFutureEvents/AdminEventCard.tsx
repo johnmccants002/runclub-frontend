@@ -95,7 +95,7 @@ const EventCard: React.FC<EventCardProps> = ({
   }, [eventId, token]); // Add eventId and token as dependencies
 
   return (
-    <TouchableOpacity
+    <Pressable
       style={styles.card}
       onPress={() => router.push(`/events/${eventId}`)}
     >
@@ -149,7 +149,7 @@ const EventCard: React.FC<EventCardProps> = ({
           </Text>
         </Pressable>
       </View>
-    </TouchableOpacity>
+    </Pressable>
   );
 };
 
