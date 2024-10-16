@@ -1,21 +1,22 @@
+import { Entypo } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { Dispatch, SetStateAction, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   Image,
   Pressable,
   StyleSheet,
   Text,
   TouchableOpacity,
+  View,
 } from "react-native";
 import ImageView from "react-native-image-viewing";
 import { showLocation } from "react-native-map-link";
-
 // Utility function to format the date
-const formatDate = (timestamp: string) => {
-  const date = new Date(Number(timestamp));
-  return date.toLocaleString(); // Adjust this as needed for your date format
-};
+import axios from "@/middleware/axios";
+import { BASE_URL } from "@/constants";
+import useAuthStore from "@/stores/auth";
 
 interface EventCardProps {
   title: string;
@@ -56,6 +57,52 @@ const EventCard: React.FC<EventCardProps> = ({
   const [visible, setIsVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const token = useAuthStore.getState().token; // Get the token from the auth store
+  const user = useAuthStore.getState().user;
+
+  const reportPost = async () => {
+    try {
+      const response = await axios.post(
+        `${BASE_URL}/events/report`,
+        { eventId: eventId, userId: user.userId },
+        {
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      console.log(response.data);
+      // if (response.ok) {
+      //   Alert.alert("Report Submitted", "Thank you for reporting the event.");
+      // } else {
+      //   Alert.alert("Error", data.message || "Unable to report the event.");
+      // }
+    } catch (error) {
+      console.error("Error reporting event:", error);
+      Alert.alert("Error", "Something went wrong while reporting the event.");
+    } finally {
+    }
+  };
+
+  const confirmReport = () => {
+    Alert.alert(
+      "Report Event",
+      "Are you sure you want to report this event?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Yes",
+          onPress: reportPost, // Call reportPost if user confirms
+        },
+      ],
+      { cancelable: true }
+    );
+  };
 
   return (
     <Pressable
@@ -74,8 +121,23 @@ const EventCard: React.FC<EventCardProps> = ({
           <Image source={{ uri: imageUrl }} style={styles.image} />
         </TouchableOpacity>
       )}
-      <Text style={styles.title}>{title}</Text>
-
+      <View>
+        <Text style={styles.title}>{title}</Text>
+        <Pressable
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            position: "absolute",
+            right: 8,
+            top: 4,
+            height: 30,
+            width: 30,
+          }}
+          onPress={confirmReport}
+        >
+          <Entypo name="dots-three-horizontal" size={20} color={"lightgray"} />
+        </Pressable>
+      </View>
       <TouchableOpacity
         onPress={() =>
           showLocation({
