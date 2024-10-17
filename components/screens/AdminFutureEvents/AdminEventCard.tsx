@@ -1,6 +1,7 @@
 import { BASE_URL } from "@/constants";
 import axiosInstance from "@/middleware/axios";
 import useAuthStore from "@/stores/auth";
+import { Entypo } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, {
   Dispatch,
@@ -10,6 +11,7 @@ import React, {
   useState,
 } from "react";
 import {
+  Alert,
   Image,
   Pressable,
   StyleSheet,
@@ -94,6 +96,29 @@ const EventCard: React.FC<EventCardProps> = ({
     loadRSVPs(); // Call the function when the component mounts
   }, [eventId, token]); // Add eventId and token as dependencies
 
+  const deletePost = async () => {
+    try {
+    } catch {}
+  };
+
+  const confirmDeletePost = () => {
+    Alert.alert(
+      "Report Event",
+      "Are you sure you want to report this event?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
+        {
+          text: "Yes",
+          onPress: deletePost, // Call reportPost if user confirms
+        },
+      ],
+      { cancelable: true }
+    );
+  };
+
   return (
     <Pressable
       style={styles.card}
@@ -111,7 +136,23 @@ const EventCard: React.FC<EventCardProps> = ({
           <Image source={{ uri: imageUrl }} style={styles.image} />
         </TouchableOpacity>
       )}
-      <Text style={styles.title}>{title}</Text>
+      <View>
+        <Text style={styles.title}>{title}</Text>
+        <Pressable
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            position: "absolute",
+            right: 8,
+            top: 4,
+            height: 30,
+            width: 30,
+          }}
+          onPress={confirmDeletePost}
+        >
+          <Entypo name="dots-three-horizontal" size={20} color={"lightgray"} />
+        </Pressable>
+      </View>
       <TouchableOpacity
         onPress={() =>
           showLocation({

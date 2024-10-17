@@ -50,6 +50,7 @@ const DATA = [
     icon: "settings",
     route: "/about/settings",
   },
+  { id: "7", title: "Gallery", icon: "photo", route: "/about/gallery" },
 ];
 
 export default function AboutSectionScreen() {

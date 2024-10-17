@@ -34,6 +34,12 @@ const Layout = (props: Props) => {
           headerStyle: { backgroundColor: "white" },
         }}
       />
+      <Stack.Screen
+        name="gallery"
+        options={{
+          headerStyle: { backgroundColor: "white" },
+        }}
+      />
     </Stack>
   );
 };
