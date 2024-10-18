@@ -22,6 +22,7 @@ const Screen: React.FC<Props> = () => {
 
       checkAuth();
       hasInitialized.current = true; // Mark as initialized
+      console.log("THIS IS THE USER", user);
     }
   }, [initializeAuth]);
 

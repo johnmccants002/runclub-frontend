@@ -123,6 +123,7 @@ export const useFutureEventsQuery = () => {
           Authorization: `Bearer ${token}`, // Include the token in the header
         },
       });
+      await new Promise((resolve) => setTimeout(resolve, 3000));
 
       return response.data.events;
     },

@@ -150,7 +150,6 @@ const CreateEventScreen: React.FC = () => {
     const dateSelected = selectedDate || startTime;
     setShowStartPicker(Platform.OS === "ios");
     if (dateSelected < new Date()) {
-      Alert.alert("Invalid Start Time", "Start time must be in the future.");
     } else {
       setStartTime(dateSelected);
     }
@@ -160,7 +159,6 @@ const CreateEventScreen: React.FC = () => {
     const dateSelected = selectedDate || endTime;
     setShowEndPicker(Platform.OS === "ios");
     if (dateSelected <= startTime) {
-      Alert.alert("Invalid End Time", "End time must be after the start time.");
     } else {
       setEndTime(dateSelected);
     }

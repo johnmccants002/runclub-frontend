@@ -16,6 +16,7 @@ import axios from "@/middleware/axios";
 import { BASE_URL } from "@/constants";
 import useAuthStore from "@/stores/auth";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import SkeletonDetailsScreen from "./skeleton";
 
 const EventDetailsScreen: React.FC = () => {
   const params = useLocalSearchParams(); // Get eventId from the URL params
@@ -43,10 +44,10 @@ const EventDetailsScreen: React.FC = () => {
       );
       console.log("THIS IS THE EVENT DETAILS", response.data);
       setRsvp(true);
-      setLoading(false);
+      setTimeout(() => setLoading(false), 3000);
     } catch (err) {
       console.log(err);
-      setLoading(false);
+      setTimeout(() => setLoading(false), 3000);
       setRsvp(false);
     }
   };
@@ -108,7 +109,7 @@ const EventDetailsScreen: React.FC = () => {
         });
         console.log("THIS IS THE EVENT DETAILS", response.data);
         setEvent(response.data); // Set event data
-        setLoading(false);
+
         fetchUserRsvp();
       } catch (err) {
         console.log(err);
@@ -121,12 +122,7 @@ const EventDetailsScreen: React.FC = () => {
   }, [params.id, rsvp]); // Fetch event data on component mount and eventId change
 
   if (loading) {
-    return (
-      <View style={styles.loaderContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
-        <Text>Loading event details...</Text>
-      </View>
-    );
+    return <SkeletonDetailsScreen onBackPressed={router.back} />;
   }
 
   if (error) {

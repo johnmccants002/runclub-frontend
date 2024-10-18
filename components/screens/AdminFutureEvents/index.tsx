@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction, useEffect } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Image, StyleSheet, View, Text, ActivityIndicator } from "react-native";
 import ParallaxScrollView from "../../ParallaxScrollView";
 import {
@@ -16,6 +16,7 @@ import useAuthStore from "@/stores/auth";
 import SkeletonEventCard from "../FutureEventsScreen/skeleton";
 import usePushNotifications from "@/hooks/usePushNotifications";
 import { useUserQuery } from "@/services/user";
+import * as SecureStore from "expo-secure-store"; // Import SecureStore from expo
 
 export default function FutureEventsScreen() {
   const {

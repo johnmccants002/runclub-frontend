@@ -128,6 +128,7 @@ const useAuthStore = create((set) => ({
     if (refreshToken) {
       try {
         // Make a request to your backend to refresh the token
+        console.log("REFRESHING THE TOKEN");
         const response = await fetch(`${BASE_URL}/auth/token`, {
           method: "POST",
           headers: {
