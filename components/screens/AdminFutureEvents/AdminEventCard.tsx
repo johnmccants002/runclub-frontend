@@ -47,6 +47,7 @@ interface EventCardProps {
   rsvpLoading: boolean; // Loading state for RSVP action
   eventId: string;
   userId: string;
+  onDeleteEvent: () => void;
 }
 
 const EventCard: React.FC<EventCardProps> = ({
@@ -63,6 +64,7 @@ const EventCard: React.FC<EventCardProps> = ({
   rsvpLoading,
   userId,
   eventId,
+  onDeleteEvent,
 }) => {
   const [visible, setIsVisible] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -96,15 +98,10 @@ const EventCard: React.FC<EventCardProps> = ({
     loadRSVPs(); // Call the function when the component mounts
   }, [eventId, token]); // Add eventId and token as dependencies
 
-  const deletePost = async () => {
-    try {
-    } catch {}
-  };
-
   const confirmDeletePost = () => {
     Alert.alert(
       "Report Event",
-      "Are you sure you want to report this event?",
+      "Are you sure you want to delete this event?",
       [
         {
           text: "Cancel",
@@ -112,7 +109,7 @@ const EventCard: React.FC<EventCardProps> = ({
         },
         {
           text: "Yes",
-          onPress: deletePost, // Call reportPost if user confirms
+          onPress: onDeleteEvent, // Call reportPost if user confirms
         },
       ],
       { cancelable: true }

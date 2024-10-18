@@ -128,3 +128,22 @@ export const useFutureEventsQuery = () => {
     },
   });
 };
+
+// Mutation to delete an event
+export const useDeleteEventMutation = () => {
+  const queryClient = useQueryClient();
+  const token = useAuthStore.getState().token; // Get the token from the auth store
+
+  return useMutation<void, Error, string>({
+    mutationFn: async (eventId: string) => {
+      await axios.delete(`${BASE_URL}/events/delete-event/${eventId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the header
+        },
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["future-events"] }); // Invalidate 'future-events' to refetch after deletion
+    },
+  });
+};

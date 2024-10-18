@@ -2,7 +2,7 @@
   "expo": {
     "name": "916 Run Club",
     "slug": "runclub",
-    "version": "1.1.8",
+    "version": "1.2.2",
     "orientation": "portrait",
     "icon": "./assets/images/appicon.png",
     "scheme": "myapp",

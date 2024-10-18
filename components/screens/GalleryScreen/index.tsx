@@ -1,24 +1,20 @@
-import React, { useState, useEffect } from "react";
+import { BASE_URL } from "@/constants";
+import { AntDesign, Feather } from "@expo/vector-icons";
+import { CameraRoll } from "@react-native-camera-roll/camera-roll"; // Import CameraRoll
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import {
-  View,
-  Image,
-  FlatList,
   ActivityIndicator,
+  Alert,
+  Dimensions,
+  FlatList,
+  Image,
   StyleSheet,
   TouchableOpacity,
-  Dimensions,
-  Alert,
-  Text,
+  View,
 } from "react-native";
-import axios from "axios";
 import ImageViewing from "react-native-image-viewing";
-import RNBlobUtil from "react-native-blob-util"; // Import react-native-blob-util
-import {
-  AntDesign,
-  Feather,
-  MaterialCommunityIcons,
-  MaterialIcons,
-} from "@expo/vector-icons";
+import * as FileSystem from "expo-file-system"; // Import FileSystem
 
 // Get the screen width
 const screenWidth = Dimensions.get("window").width;
@@ -32,9 +28,7 @@ const GalleryScreen = () => {
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:5050/events/gallery"
-        );
+        const response = await axios.get(`${BASE_URL}/events/gallery`);
         const imageUrls = response.data.imageUrls.map((url) => ({
           uri: url,
         }));
@@ -55,43 +49,36 @@ const GalleryScreen = () => {
     setIsViewerVisible(true); // Show the image viewer modal
   };
 
-  // Function to download the image
+  // Function to download the image and save it to the Camera Roll
+  // Function to download the image and save it to the Camera Roll
   const downloadImage = async (url) => {
-    const { config, fs } = RNBlobUtil;
-    const PictureDir = fs.dirs.PictureDir; // Picture directory path
+    try {
+      // Step 1: Download the image to a local file
+      const fileUri = `${FileSystem.documentDirectory}${url.split("/").pop()}`; // Create a local file path
+      const downloadResult = await FileSystem.downloadAsync(url, fileUri);
 
-    const filename = `${new Date().toISOString()}.jpg`; // Create a unique filename
-    const filePath = `${PictureDir}/${filename}`;
-
-    // Configure the download
-    config({
-      fileCache: true,
-      appendExt: "jpg", // Adjust the extension based on your image format
-      path: filePath,
-      addAndroidDownloads: {
-        useDownloadManager: true,
-        notification: true,
-        path: filePath, // Path where the image will be saved
-        description: "Downloading image",
-        mime: "image/jpeg",
-        mediaScannable: true, // To make the file visible in the gallery
-      },
-    })
-      .fetch("GET", url)
-      .then((res) => {
+      if (downloadResult.status === 200) {
+        // Step 2: Save the local file to the Camera Roll
+        const savedUri = await CameraRoll.save(downloadResult.uri, {
+          type: "photo",
+          album: "YourAlbumName",
+        });
         Alert.alert(
           "Download Complete",
-          `Image has been saved to your gallery!`
+          "Image has been saved to your gallery!"
         );
-        console.log("The file saved to ", res.path());
-      })
-      .catch((error) => {
+        console.log("Image saved at: ", savedUri);
+      } else {
         Alert.alert(
           "Download Failed",
           "There was an error downloading the image."
         );
-        console.error("Download error:", error);
-      });
+        console.error("Download error:", downloadResult.status);
+      }
+    } catch (error) {
+      Alert.alert("Save error", "There was an error saving the image.");
+      console.error("Save error:", error);
+    }
   };
 
   // Custom Header with Close and Download buttons
@@ -147,6 +134,8 @@ const GalleryScreen = () => {
             />
           </TouchableOpacity>
         )}
+        style={{ backgroundColor: "white" }}
+        contentContainerStyle={{ backgroundColor: "white" }}
         numColumns={3} // 3 columns for 3x3 grid
       />
 
@@ -166,6 +155,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 10,
+    backgroundColor: "white",
   },
   image: {
     margin: 5, // Adds margin around each image

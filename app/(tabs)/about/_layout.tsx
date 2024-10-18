@@ -38,6 +38,8 @@ const Layout = (props: Props) => {
         name="gallery"
         options={{
           headerStyle: { backgroundColor: "white" },
+          title: "Gallery",
+          headerBackTitleVisible: false,
         }}
       />
     </Stack>

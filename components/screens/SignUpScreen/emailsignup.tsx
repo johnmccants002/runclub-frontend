@@ -1,25 +1,20 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  TextInput,
-  StyleSheet,
-  TouchableWithoutFeedback,
-  Keyboard,
-  KeyboardAvoidingView,
-  Pressable,
-  ActivityIndicator,
-  Dimensions,
-  Alert,
-  Platform,
-} from "react-native";
-import { useRegisterMutation } from "../../../services/auth";
-import useAuthStore from "../../../stores/auth";
 import Checkbox from "expo-checkbox";
 import { useRouter } from "expo-router";
 import * as WebBrowser from "expo-web-browser";
-import { sendNewUserNotification } from "@/services/notifications";
+import React, { useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  Dimensions,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { useRegisterMutation } from "../../../services/auth";
+import useAuthStore from "../../../stores/auth";
 
 const { width, height } = Dimensions.get("window");
 
@@ -60,6 +55,10 @@ const SignUpScreen: React.FC = () => {
     if (password !== confirmPassword) {
       setErrorMessage("Passwords do not match.");
       return;
+    }
+
+    if (!tosAccepted) {
+      setErrorMessage("Please accept the Terms of Service");
     }
 
     registerMutation.mutate(

@@ -47,10 +47,15 @@ const DATA = [
   {
     id: "6",
     title: "Settings",
-    icon: "settings",
+    icon: "settings-outline",
     route: "/about/settings",
   },
-  { id: "7", title: "Gallery", icon: "photo", route: "/about/gallery" },
+  {
+    id: "7",
+    title: "Gallery",
+    icon: "images-outline",
+    route: "/about/gallery",
+  },
 ];
 
 export default function AboutSectionScreen() {

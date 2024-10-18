@@ -6,7 +6,10 @@ import {
   useCreateRsvpMutation,
   useDeleteRsvpMutation,
 } from "../../../services/rsvps";
-import { useFutureEventsQuery } from "@/services/events";
+import {
+  useFutureEventsQuery,
+  useDeleteEventMutation,
+} from "@/services/events";
 import { Event as EventType } from "../../../types/types"; // Adjust path if needed
 import AdminEventCard from "./AdminEventCard"; // Assuming you'll create a new component similar to Announcement
 import useAuthStore from "@/stores/auth";
@@ -32,6 +35,8 @@ export default function FutureEventsScreen() {
   // Mutation to RSVP for an event
   const { mutate: createRsvp, status: createStatus } = useCreateRsvpMutation();
   const { mutate: deleteRsvp, status: deleteStatus } = useDeleteRsvpMutation();
+  const { mutate: deleteEvent, status: deleteEventStatus } =
+    useDeleteEventMutation();
 
   const { expoPushToken, notification } = usePushNotifications(user?._id);
 
@@ -104,6 +109,19 @@ export default function FutureEventsScreen() {
     setLoading(false);
   };
 
+  // Function to handle event deletion (for admins)
+  const handleDeleteEvent = (eventId: string) => {
+    deleteEvent(eventId, {
+      onSuccess: () => {
+        console.log(`Event ${eventId} deleted successfully`);
+        // Optionally, refetch events or show a success message
+      },
+      onError: (error) => {
+        console.error(`Failed to delete event ${eventId}:`, error);
+      },
+    });
+  };
+
   return (
     <>
       <ParallaxScrollView
@@ -153,6 +171,7 @@ export default function FutureEventsScreen() {
                       eventId={event._id}
                       userId={user?.userId}
                       onRSVP={handleRsvp}
+                      onDeleteEvent={() => handleDeleteEvent(event._id)} // Pass delete handler to the card
                     />
                   </View>
                 );
