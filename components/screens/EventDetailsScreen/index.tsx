@@ -17,6 +17,7 @@ import { BASE_URL } from "@/constants";
 import useAuthStore from "@/stores/auth";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import SkeletonDetailsScreen from "./skeleton";
+import { useCreateRsvpMutation, useDeleteRsvpMutation } from "@/services/rsvps";
 
 const EventDetailsScreen: React.FC = () => {
   const params = useLocalSearchParams(); // Get eventId from the URL params
@@ -27,6 +28,10 @@ const EventDetailsScreen: React.FC = () => {
   const token = useAuthStore.getState().token; // Get the token from the auth store
   const router = useRouter();
   const [rsvp, setRsvp] = useState(false);
+  const { mutate: createRsvp, isLoading: createRsvpLoading } =
+    useCreateRsvpMutation(); // Mutation for creating RSVP
+  const { mutate: deleteRsvp, isLoading: deleteRsvpLoading } =
+    useDeleteRsvpMutation(); // Mutation for deleting RSVP
 
   const currentUser = useAuthStore((state) => state.user);
 
@@ -44,54 +49,42 @@ const EventDetailsScreen: React.FC = () => {
       );
       console.log("THIS IS THE EVENT DETAILS", response.data);
       setRsvp(true);
-      setTimeout(() => setLoading(false), 3000);
+      setTimeout(() => setLoading(false), 2000);
     } catch (err) {
       console.log(err);
-      setTimeout(() => setLoading(false), 3000);
+      setTimeout(() => setLoading(false), 2000);
       setRsvp(false);
     }
   };
 
-  const rsvpToEvent = async () => {
-    try {
-      const { data } = await axios.post(
-        `${BASE_URL}/rsvps`,
+  // Function to handle RSVP
+  const handleRsvp = () => {
+    if (rsvp) {
+      // Un-RSVP
+      deleteRsvp(
+        { userId: currentUser.userId, eventId: `${params.id}` },
         {
-          userId: currentUser.userId,
-          eventId: params.id,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // Include the token in the header
+          onSuccess: () => {
+            setRsvp(false); // Update state
+          },
+          onError: (error) => {
+            setError("Failed to un-RSVP for the event");
           },
         }
       );
-      setRsvp(true);
-      setLoading(false);
-    } catch (err) {
-      console.log(err);
-      setError("Failed to load event details");
-      setLoading(false);
-      setRsvp(false);
-    }
-  };
-
-  const unrsvpToEvent = async () => {
-    try {
-      const response = await fetch(
-        `${BASE_URL}/rsvps/${params.id}/${currentUser.userId}`,
+    } else {
+      // RSVP
+      createRsvp(
+        { userId: currentUser.userId, eventId: `${params.id}` },
         {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`, // Include the token in the header
-            "Content-Type": "application/json",
+          onSuccess: () => {
+            setRsvp(true); // Update state
+          },
+          onError: (error) => {
+            setError("Failed to RSVP for the event");
           },
         }
       );
-
-      setRsvp(false);
-    } catch (err) {
-      console.log(err);
     }
   };
 
@@ -198,11 +191,7 @@ const EventDetailsScreen: React.FC = () => {
             rsvp ? styles.rsvpButtonActive : styles.rsvpButtonInactive,
           ]}
           onPress={() => {
-            if (rsvp) {
-              unrsvpToEvent();
-            } else {
-              rsvpToEvent();
-            }
+            handleRsvp();
           }}
         >
           {loading ? (
