@@ -87,6 +87,18 @@ const CreateEventScreen: React.FC = () => {
       }
     }
     console.log("REACHED THIS POINT");
+
+    console.log(
+      JSON.stringify({
+        title,
+        details,
+        startTime: startTime.toISOString(),
+        endTime: endTime.toISOString(),
+        photo: imageUrl || "", // Send the uploaded image URL or an empty string if no image
+        adminId: userId,
+        location, // Include the full location object in the event details
+      })
+    );
     // Once the image is uploaded (if applicable), call the mutation
     addEventMutation.mutate(
       {

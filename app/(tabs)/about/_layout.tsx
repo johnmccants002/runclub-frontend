@@ -35,10 +35,18 @@ const Layout = (props: Props) => {
         }}
       />
       <Stack.Screen
-        name="gallery"
+        name="gallery/index"
         options={{
           headerStyle: { backgroundColor: "white" },
-          title: "Gallery",
+          title: "Gallery List",
+          headerBackTitleVisible: false,
+        }}
+      />
+      <Stack.Screen
+        name="gallery/[id]"
+        options={{
+          headerStyle: { backgroundColor: "white" },
+          title: "Events",
           headerBackTitleVisible: false,
         }}
       />

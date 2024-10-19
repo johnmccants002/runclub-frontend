@@ -2,7 +2,7 @@
   "expo": {
     "name": "916 Run Club",
     "slug": "runclub",
-    "version": "1.2.2",
+    "version": "1.2.3",
     "orientation": "portrait",
     "icon": "./assets/images/appicon.png",
     "scheme": "myapp",
@@ -15,7 +15,11 @@
     },
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.johnmccants002.runclub"
+      "bundleIdentifier": "com.johnmccants002.runclub",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "We need access to your photos to allow you to upload and save event-related photos.",
+        "NSPhotoLibraryAddUsageDescription": "We need permission to save event-related photos to your device."
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -38,7 +42,7 @@
       [
         "expo-camera",
         {
-          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera to scan QR codes to check people into the runs.",
+          "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera to upload photos for events and check people into events via QR code.",
           "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone to record audio pertaining to the runs.",
           "recordAudioAndroid": true
         }

@@ -1,10 +1,12 @@
 import { BASE_URL } from "@/constants";
+import useAuthStore from "@/stores/auth";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import { CameraRoll } from "@react-native-camera-roll/camera-roll"; // Import CameraRoll
 import axios from "axios";
+import * as FileSystem from "expo-file-system"; // Import FileSystem
+import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
-  ActivityIndicator,
   Alert,
   Dimensions,
   FlatList,
@@ -12,9 +14,10 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
+  Text,
 } from "react-native";
 import ImageViewing from "react-native-image-viewing";
-import * as FileSystem from "expo-file-system"; // Import FileSystem
+import GalleryScreenSkeleton from "./skeleton";
 
 // Get the screen width
 const screenWidth = Dimensions.get("window").width;
@@ -24,16 +27,24 @@ const GalleryScreen = () => {
   const [loading, setLoading] = useState(true);
   const [selectedIndex, setSelectedIndex] = useState(0); // Index of selected image
   const [isViewerVisible, setIsViewerVisible] = useState(false); // Toggle for image viewing modal
+  const { id } = useLocalSearchParams();
+  const token = useAuthStore.getState().token; // Get the token from the auth store
 
   useEffect(() => {
     const fetchImages = async () => {
       try {
-        const response = await axios.get(`${BASE_URL}/events/gallery`);
-        const imageUrls = response.data.imageUrls.map((url) => ({
-          uri: url,
-        }));
-        setImages(imageUrls); // Store the image URLs formatted for the gallery
-        setLoading(false);
+        const response = await axios.get(
+          `${BASE_URL}/events/list/${id}/images`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const imageUrls = response.data.images;
+        const newArray = imageUrls.map((url) => {
+          return { uri: url };
+        });
+        console.log(imageUrls);
+        // This logs this  ["https://storage.googleapis.com/runclub-b067c.appspot.com/gallery/2024-10-20-darling-aviary-run-sunday-morning/IMG_6040.jpg"]
+        setImages(newArray); // Store the image URLs formatted for the gallery
+        setTimeout(() => setLoading(false), 1500);
       } catch (error) {
         console.error("Error fetching images:", error);
         setLoading(false);
@@ -98,7 +109,7 @@ const GalleryScreen = () => {
         <AntDesign name="close" size={24} />
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => downloadImage(images[selectedIndex].uri)}
+        onPress={() => downloadImage(images[selectedIndex])}
         style={{
           height: 42,
           width: 42,
@@ -113,8 +124,45 @@ const GalleryScreen = () => {
     </View>
   );
 
+  const renderEmpty = () => {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "white",
+          padding: 30,
+          gap: 20,
+        }}
+      >
+        <Image
+          source={require("@/assets/images/left.png")}
+          resizeMode="contain"
+          style={{ width: 300, height: 300 }}
+        />
+        <View
+          style={{ gap: 20, alignItems: "center", justifyContent: "center" }}
+        >
+          <Text style={{ fontSize: 24, fontFamily: "helvetica" }}>
+            No Events Photos Uploaded
+          </Text>
+          <Text
+            style={{
+              fontSize: 24,
+              fontFamily: "helvetica",
+              textAlign: "center",
+            }}
+          >
+            We'll notify you when they do get uploaded.
+          </Text>
+        </View>
+      </View>
+    );
+  };
+
   if (loading) {
-    return <ActivityIndicator size="large" color="#0000ff" />;
+    return <GalleryScreenSkeleton />;
   }
 
   // Calculate the image size for 3 images per row, with margin
@@ -125,7 +173,7 @@ const GalleryScreen = () => {
       {/* FlatList for 3x3 Grid Layout */}
       <FlatList
         data={images}
-        keyExtractor={(item, index) => index.toString()}
+        keyExtractor={(item) => item.uri}
         renderItem={({ item, index }) => (
           <TouchableOpacity onPress={() => handleImagePress(index)}>
             <Image
@@ -137,6 +185,7 @@ const GalleryScreen = () => {
         style={{ backgroundColor: "white" }}
         contentContainerStyle={{ backgroundColor: "white" }}
         numColumns={3} // 3 columns for 3x3 grid
+        ListEmptyComponent={renderEmpty}
       />
 
       {/* Image Viewer Modal */}
