@@ -1,23 +1,23 @@
+import { BASE_URL } from "@/constants";
+import axios from "@/middleware/axios";
+import { useCreateRsvpMutation, useDeleteRsvpMutation } from "@/services/rsvps";
+import useAuthStore from "@/stores/auth";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useLocalSearchParams, useRouter } from "expo-router"; // For Expo router
 import React, { useEffect, useState } from "react";
 import {
-  ScrollView,
+  ActivityIndicator,
   Image,
+  Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  ActivityIndicator,
-  Pressable,
 } from "react-native";
-import { useRouter, useLocalSearchParams } from "expo-router"; // For Expo router
-import { showLocation } from "react-native-map-link";
 import ImageView from "react-native-image-viewing";
-import axios from "@/middleware/axios";
-import { BASE_URL } from "@/constants";
-import useAuthStore from "@/stores/auth";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { showLocation } from "react-native-map-link";
 import SkeletonDetailsScreen from "./skeleton";
-import { useCreateRsvpMutation, useDeleteRsvpMutation } from "@/services/rsvps";
 
 const EventDetailsScreen: React.FC = () => {
   const params = useLocalSearchParams(); // Get eventId from the URL params
@@ -175,12 +175,8 @@ const EventDetailsScreen: React.FC = () => {
           <Text style={styles.location}>{event.location.name}</Text>
         </TouchableOpacity>
 
-        <Text style={styles.date}>
-          Start: {new Date(event.startTime).toLocaleString()}
-        </Text>
-        <Text style={styles.date}>
-          End: {new Date(event.endTime).toLocaleString()}
-        </Text>
+        <Text style={styles.date}>Start: {event.startTime}</Text>
+        <Text style={styles.date}>End: {event.endTime}</Text>
 
         <Text style={styles.description}>{event.details}</Text>
 

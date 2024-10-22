@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, Image, StyleSheet, ScrollView } from "react-native";
+import { Image, ScrollView, StyleSheet, Text } from "react-native";
 
 const AboutUsScreen = () => {
   return (
@@ -18,8 +18,8 @@ const AboutUsScreen = () => {
         916 Run Club was founded by Cory Peters, a Sacramento native, who was
         inspired to bring the community together through fitness. Inclusiveness
         is what we pride ourselves on; anyone, regardless of how good you are at
-        running, is invited. Starting in early 2024, we’ve grown into something
-        bigger, and we’re here to stay for many more years to come.
+        running, is invited. Starting in early 2024, we've grown into something
+        bigger, and we're here to stay for many more years to come.
       </Text>
 
       <Text style={styles.sectionTitle}>Our Mission</Text>

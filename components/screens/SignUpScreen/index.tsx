@@ -1,16 +1,16 @@
-import { Colors } from "../../../constants/Colors";
-import { defaultStyles } from "../../../constants/Styles";
 import { Link, useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from "react-native";
+import { Colors } from "../../../constants/Colors";
+import { defaultStyles } from "../../../constants/Styles";
 
 const SignUpScreen = () => {
   const [countryCode, setCountryCode] = useState("+49");

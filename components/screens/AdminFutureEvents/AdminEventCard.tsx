@@ -22,12 +22,6 @@ import {
 import ImageView from "react-native-image-viewing";
 import { showLocation } from "react-native-map-link";
 
-// Utility function to format the date
-const formatDate = (timestamp: string) => {
-  const date = new Date(Number(timestamp));
-  return date.toLocaleString(); // Adjust this as needed for your date format
-};
-
 interface EventCardProps {
   title: string;
   description: string;

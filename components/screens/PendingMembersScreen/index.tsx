@@ -1,22 +1,22 @@
-import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Alert,
-  FlatList,
-  TouchableOpacity,
-  Image,
-} from "react-native";
-import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
-import { User } from "@/types/types"; // Adjust path accordingly
+import { BASE_URL } from "@/constants";
 import {
   useAcceptMemberMutation,
   useDenyMemberMutation,
 } from "@/services/members"; // Adjust path accordingly
-import { BASE_URL } from "@/constants";
 import useAuthStore from "@/stores/auth"; // Import the auth store to get the token
+import { User } from "@/types/types"; // Adjust path accordingly
+import { useQuery } from "@tanstack/react-query";
+import axios from "axios";
+import React from "react";
+import {
+  Alert,
+  FlatList,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
 
 const fetchPendingMembers = async (): Promise<User[]> => {
   const token = useAuthStore.getState().token; // Get the token from the auth store

@@ -1,13 +1,13 @@
 import { palette } from "@/constants/Colors";
-import { FontAwesome5, Entypo, FontAwesome6 } from "@expo/vector-icons";
-import React, { useState } from "react";
-import { View, Text, StyleSheet, ActivityIndicator } from "react-native";
+import {
+  useAcceptedThisMonthQuery,
+  useAcceptedThisWeekQuery,
+} from "@/services/members";
+import { Entypo, FontAwesome6 } from "@expo/vector-icons";
 import { useAssets } from "expo-asset";
 import { ResizeMode, Video } from "expo-av";
-import {
-  useAcceptedThisWeekQuery,
-  useAcceptedThisMonthQuery,
-} from "@/services/members";
+import React, { useState } from "react";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
 
 type Props = {};
 

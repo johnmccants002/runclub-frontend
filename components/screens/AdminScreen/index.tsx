@@ -4,36 +4,7 @@ import useAuthStore from "@/stores/auth";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import React, { useEffect } from "react";
-import {
-  FlatList,
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-
-const DATA = [
-  {
-    id: "1",
-    title: "Contact Us",
-    icon: "call-outline",
-    route: "/about/contact",
-  },
-  {
-    id: "2",
-    title: "About Us",
-    icon: "information-circle-outline",
-    route: "/about/aboutus",
-  },
-
-  {
-    id: "6",
-    title: "Settings",
-    icon: "settings",
-    route: "/about/settings",
-  },
-];
+import { FlatList, Pressable, StyleSheet, Text, View } from "react-native";
 
 const ADMIN_DATA = [
   {

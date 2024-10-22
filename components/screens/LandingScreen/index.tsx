@@ -1,4 +1,3 @@
-import { useAssets } from "expo-asset";
 import React, { useEffect, useState } from "react";
 import {
   Dimensions,

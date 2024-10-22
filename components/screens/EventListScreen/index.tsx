@@ -68,6 +68,8 @@ const EventListScreen = () => {
         <FlatList
           data={events}
           keyExtractor={(item) => item._id}
+          style={{ backgroundColor: "white" }}
+          contentContainerStyle={{ backgroundColor: "white" }}
           renderItem={renderItem}
           ListEmptyComponent={
             <Text>No Photos yet. We'll let you know when we upload some</Text>
@@ -83,6 +85,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+    backgroundColor: "white",
   },
   row: {
     flexDirection: "row",

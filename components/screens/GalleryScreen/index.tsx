@@ -6,15 +6,17 @@ import axios from "axios";
 import * as FileSystem from "expo-file-system"; // Import FileSystem
 import { useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
+import * as MediaLibrary from "expo-media-library";
+
 import {
   Alert,
   Dimensions,
   FlatList,
   Image,
   StyleSheet,
+  Text,
   TouchableOpacity,
   View,
-  Text,
 } from "react-native";
 import ImageViewing from "react-native-image-viewing";
 import GalleryScreenSkeleton from "./skeleton";
@@ -61,24 +63,35 @@ const GalleryScreen = () => {
   };
 
   // Function to download the image and save it to the Camera Roll
-  // Function to download the image and save it to the Camera Roll
   const downloadImage = async (url) => {
     try {
+      // Request permissions
+      const { status } = await MediaLibrary.requestPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert(
+          "Permission Denied",
+          "We need permission to save images to your gallery."
+        );
+        return;
+      }
       // Step 1: Download the image to a local file
       const fileUri = `${FileSystem.documentDirectory}${url.split("/").pop()}`; // Create a local file path
+      console.log(url, "THIS IS THE URL");
       const downloadResult = await FileSystem.downloadAsync(url, fileUri);
 
       if (downloadResult.status === 200) {
-        // Step 2: Save the local file to the Camera Roll
-        const savedUri = await CameraRoll.save(downloadResult.uri, {
-          type: "photo",
-          album: "YourAlbumName",
-        });
-        Alert.alert(
-          "Download Complete",
-          "Image has been saved to your gallery!"
-        );
-        console.log("Image saved at: ", savedUri);
+        const fileInfo = await FileSystem.getInfoAsync(downloadResult.uri);
+        if (fileInfo.exists) {
+          // Step 2: Save the local file to the Camera Roll
+          const savedUri = await CameraRoll.save(downloadResult.uri, {
+            type: "photo",
+          });
+          Alert.alert(
+            "Download Complete",
+            "Image has been saved to your gallery!"
+          );
+          console.log("Image saved at: ", savedUri);
+        }
       } else {
         Alert.alert(
           "Download Failed",
@@ -109,7 +122,7 @@ const GalleryScreen = () => {
         <AntDesign name="close" size={24} />
       </TouchableOpacity>
       <TouchableOpacity
-        onPress={() => downloadImage(images[selectedIndex])}
+        onPress={() => downloadImage(images[selectedIndex].uri)}
         style={{
           height: 42,
           width: 42,
