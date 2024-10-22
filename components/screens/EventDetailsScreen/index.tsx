@@ -3,11 +3,15 @@ import axios from "@/middleware/axios";
 import { useCreateRsvpMutation, useDeleteRsvpMutation } from "@/services/rsvps";
 import useAuthStore from "@/stores/auth";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import * as Calendar from "expo-calendar";
 import { useLocalSearchParams, useRouter } from "expo-router"; // For Expo router
 import React, { useEffect, useState } from "react";
+
 import {
   ActivityIndicator,
+  Alert,
   Image,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -85,6 +89,50 @@ const EventDetailsScreen: React.FC = () => {
           },
         }
       );
+    }
+  };
+
+  const getCalendarPermissions = async () => {
+    const { status } = await Calendar.requestCalendarPermissionsAsync();
+    if (status === "granted") {
+      return true;
+    } else {
+      Alert.alert(
+        "Permission denied",
+        "Calendar access is needed to add the event."
+      );
+      return false;
+    }
+  };
+
+  const addToCalendar = async () => {
+    const hasPermission = await getCalendarPermissions();
+    if (!hasPermission) return;
+
+    // Get the default calendar ID (for iOS) or create a new calendar for Android
+    let calendarId;
+    if (Platform.OS === "ios") {
+      const defaultCalendar = await Calendar.getDefaultCalendarAsync();
+      calendarId = defaultCalendar.id;
+    } else {
+      const calendars = await Calendar.getCalendarsAsync();
+      calendarId = calendars[0].id; // Get the first available calendar
+    }
+
+    const eventDetails = {
+      title: event.title,
+      location: event.location.name,
+      startDate: event.startDate,
+      endDate: event.endDate,
+      notes: event.details,
+    };
+
+    try {
+      const eventId = await Calendar.createEventAsync(calendarId, eventDetails);
+      Alert.alert("Success", "Event has been added to your calendar");
+    } catch (error) {
+      console.error("Error adding event to calendar:", error);
+      Alert.alert("Error", "Could not add event to the calendar");
     }
   };
 
@@ -179,6 +227,10 @@ const EventDetailsScreen: React.FC = () => {
         <Text style={styles.date}>End: {event.endTime}</Text>
 
         <Text style={styles.description}>{event.details}</Text>
+        {/* Calendar Button */}
+        <TouchableOpacity style={styles.calendarButton} onPress={addToCalendar}>
+          <Text style={styles.calendarButtonText}>Save to Calendar</Text>
+        </TouchableOpacity>
 
         {/* RSVP Button */}
         <TouchableOpacity
@@ -259,8 +311,21 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginTop: 20,
   },
+  calendarButton: {
+    paddingVertical: 15,
+    borderRadius: 10,
+    alignItems: "center",
+    marginTop: 20,
+    borderColor: "#3b5998",
+    borderWidth: 2,
+  },
   rsvpButtonActive: {
     backgroundColor: "#4CAF50",
+  },
+  calendarButtonText: {
+    color: "#3b5998",
+    fontSize: 18,
+    fontWeight: "bold",
   },
   rsvpButtonInactive: {
     backgroundColor: "#3b5998",

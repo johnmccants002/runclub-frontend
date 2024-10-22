@@ -46,6 +46,12 @@
           "microphonePermission": "Allow $(PRODUCT_NAME) to access your microphone to record audio pertaining to the runs.",
           "recordAudioAndroid": true
         }
+      ],
+      [
+        "expo-calendar",
+        {
+          "calendarPermission": "The app needs to access your calendar to be able to save the event information to it."
+        }
       ]
     ],
     "experiments": {
