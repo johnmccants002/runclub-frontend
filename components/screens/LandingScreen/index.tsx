@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   Dimensions,
+  Modal,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -14,17 +15,35 @@ import { Link } from "expo-router";
 import AnimatedSlideText from "../../../components/animated/AnimateSlideText";
 import { Colors } from "../../../constants/Colors";
 import SplashScreen from "../SplashScreen";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import EventsModal from "@/components/EventsModal";
+import axios from "@/middleware/axios";
+import { BASE_URL } from "@/constants";
 
 type Props = {};
 
 const LandingScreen = (props: Props) => {
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
+  const [eventsModalVisible, setEventsModalVisible] = useState(false);
+  const [eventsData, setEventsData] = useState([]);
 
   useEffect(() => {
     if (videoLoaded) {
       setTimeout(() => {
         setShowVideo(true);
+
+        const fetchEvents = async () => {
+          try {
+            const response = await axios.get(`${BASE_URL}/events/basic`);
+            console.log(response.data.events[0].location);
+            setEventsData(response.data.events);
+          } catch (err) {
+            console.error("Error fetching events:", err);
+          }
+        };
+
+        fetchEvents(); // Call the function inside the useEffect
       }, 3000);
     }
   }, [videoLoaded]);
@@ -83,6 +102,31 @@ const LandingScreen = (props: Props) => {
               </TouchableOpacity>
             </Link>
           </View>
+          <TouchableOpacity
+            style={{
+              alignItems: "center",
+              justifyContent: "center",
+              width: "50%",
+              flexDirection: "row",
+              marginBottom: 40,
+              gap: 12,
+              height: 40,
+
+              backgroundColor: "white",
+              alignSelf: "center",
+              borderRadius: 20,
+            }}
+            onPress={() => setEventsModalVisible(true)}
+          >
+            <Text style={{ fontSize: 18, textAlign: "center" }}>
+              View Future Events
+            </Text>
+          </TouchableOpacity>
+          <EventsModal
+            events={eventsData}
+            visible={eventsModalVisible}
+            onClose={() => setEventsModalVisible(false)}
+          />
         </>
       ) : (
         <SplashScreen />
@@ -126,7 +170,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     gap: 20,
-    marginBottom: 60,
+    marginBottom: 40,
     paddingHorizontal: 20,
   },
 });
