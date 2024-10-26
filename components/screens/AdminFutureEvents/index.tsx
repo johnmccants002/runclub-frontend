@@ -1,29 +1,29 @@
-import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { Image, StyleSheet, View, Text, ActivityIndicator } from "react-native";
-import ParallaxScrollView from "../../ParallaxScrollView";
+import usePushNotifications from "@/hooks/usePushNotifications";
+import {
+  useDeleteEventMutation,
+  useFutureEventsQuery,
+  useAllEventsQuery,
+} from "@/services/events";
+import { useUserQuery } from "@/services/user";
+import useAuthStore from "@/stores/auth";
+import React, { Dispatch, SetStateAction } from "react";
+import { Image, StyleSheet, Text, View } from "react-native";
 import {
   useAllRsvpsQuery,
   useCreateRsvpMutation,
   useDeleteRsvpMutation,
 } from "../../../services/rsvps";
-import {
-  useFutureEventsQuery,
-  useDeleteEventMutation,
-} from "@/services/events";
 import { Event as EventType } from "../../../types/types"; // Adjust path if needed
-import AdminEventCard from "./AdminEventCard"; // Assuming you'll create a new component similar to Announcement
-import useAuthStore from "@/stores/auth";
+import ParallaxScrollView from "../../ParallaxScrollView";
 import SkeletonEventCard from "../FutureEventsScreen/skeleton";
-import usePushNotifications from "@/hooks/usePushNotifications";
-import { useUserQuery } from "@/services/user";
-import * as SecureStore from "expo-secure-store"; // Import SecureStore from expo
+import AdminEventCard from "./AdminEventCard"; // Assuming you'll create a new component similar to Announcement
 
 export default function FutureEventsScreen() {
   const {
     data: futureEvents,
     isLoading: eventsLoading,
     error,
-  } = useFutureEventsQuery();
+  } = useAllEventsQuery();
   const { data: allRsvps, isLoading: rsvpsLoading } = useAllRsvpsQuery(); // Fetch all RSVPs at once
   const currentUser = useAuthStore((state) => state.user);
 
@@ -134,7 +134,7 @@ export default function FutureEventsScreen() {
           />
         }
       >
-        <Text style={styles.sectionTitle}>Upcoming Events</Text>
+        <Text style={styles.sectionTitle}>916 Run Club Events</Text>
 
         <View style={{ marginTop: -80, zIndex: 99 }}>
           {eventsLoading ? (

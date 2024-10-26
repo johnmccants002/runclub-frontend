@@ -63,6 +63,7 @@ const EventCard: React.FC<EventCardProps> = ({
   const [visible, setIsVisible] = useState(false);
   const [loading, setLoading] = useState(false);
   const token = useMemo(() => useAuthStore.getState().token, []);
+  const [photosUploaded, setPhotosUploaded] = useState(false);
 
   const [rsvps, setRsvps] = useState([]);
   const router = useRouter();
@@ -80,6 +81,27 @@ const EventCard: React.FC<EventCardProps> = ({
       console.log("ERROR FETCHING RSVPS: ", err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const markPhotosUploaded = async (eventId, token) => {
+    try {
+      const response = await axiosInstance.post(
+        `/admin/uploaded/${eventId}`, // The route to mark photos as uploaded
+        {}, // No body is needed for this request
+        {
+          headers: {
+            Authorization: `Bearer ${token}`, // Add the Bearer token for authorization
+          },
+        }
+      );
+
+      console.log("Photos uploaded status updated:", response.data);
+    } catch (err) {
+      console.error(
+        "Error marking photos as uploaded:",
+        err.response ? err.response.data : err.message
+      );
     }
   };
 
@@ -113,7 +135,7 @@ const EventCard: React.FC<EventCardProps> = ({
   return (
     <Pressable
       style={styles.card}
-      onPress={() => router.push(`/events/${eventId}`)}
+      onPress={() => router.push(`/admin/events/${eventId}`)}
     >
       {visible ? (
         <ImageView

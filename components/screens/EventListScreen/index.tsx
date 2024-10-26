@@ -94,6 +94,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     borderBottomWidth: 1,
     borderBottomColor: "#ccc",
+    backgroundColor: "white",
   },
   eventInfo: {
     flexDirection: "column",

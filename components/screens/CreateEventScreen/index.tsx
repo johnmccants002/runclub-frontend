@@ -30,6 +30,7 @@ const CreateEventScreen: React.FC = () => {
   const [predictions, setPredictions] = useState<any[]>([]); // For storing autocomplete results
   const userId = "66cea48dded84be71dcb04de"; // Admin ID or user ID
   const token = useAuthStore.getState().token;
+  const user = useAuthStore.getState().user;
 
   // States for handling the date and time picker
   const [startTime, setStartTime] = useState<Date>(new Date());
@@ -82,7 +83,7 @@ const CreateEventScreen: React.FC = () => {
         const data = await response.data;
         imageUrl = data.event.imageUrl; // Store the image URL returned by the backend
       } catch (error) {
-        Alert.alert("Error", "Failed to upload image.");
+        Alert.alert("Error", `Failed to upload image. ${error}`);
         return;
       }
     }
@@ -95,11 +96,12 @@ const CreateEventScreen: React.FC = () => {
         startTime: startTime.toISOString(),
         endTime: endTime.toISOString(),
         photo: imageUrl || "", // Send the uploaded image URL or an empty string if no image
-        adminId: userId,
+        adminId: user._id,
         location, // Include the full location object in the event details
       })
     );
     // Once the image is uploaded (if applicable), call the mutation
+    console.log("USER: ", user);
     addEventMutation.mutate(
       {
         title,
@@ -107,7 +109,7 @@ const CreateEventScreen: React.FC = () => {
         startTime: startTime.toISOString(),
         endTime: endTime.toISOString(),
         photo: imageUrl || "", // Send the uploaded image URL or an empty string if no image
-        adminId: userId,
+        adminId: user.userId,
         location, // Include the full location object in the event details
       },
       {
@@ -123,8 +125,8 @@ const CreateEventScreen: React.FC = () => {
           setLocationInput(""); // Reset the input field
           setPredictions([]);
         },
-        onError: () => {
-          Alert.alert("Error", "Failed to create event.");
+        onError: (error) => {
+          Alert.alert("Error", `Failed to create event. ${error}}`);
         },
       }
     );

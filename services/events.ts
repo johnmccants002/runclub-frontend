@@ -148,3 +148,27 @@ export const useDeleteEventMutation = () => {
     },
   });
 };
+
+export const useAllEventsQuery = () => {
+  const token = React.useMemo(
+    () => useAuthStore.getState().token,
+    [useAuthStore]
+  );
+
+  return useQuery<Event[]>({
+    queryKey: ["all-events"],
+    queryFn: async () => {
+      if (!token) {
+        throw new Error("No token provided");
+      }
+      const response = await axios.get(`${BASE_URL}/events/all`, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the header
+        },
+      });
+      await new Promise((resolve) => setTimeout(resolve, 3000)); // Simulate a delay
+
+      return response.data.events;
+    },
+  });
+};
